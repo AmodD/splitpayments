@@ -13,6 +13,12 @@ return new class extends Migration
     {
         Schema::create('submerchants', function (Blueprint $table) {
             $table->id();
+            $table->string('DBA_Name');
+            $table->string('GSTN');
+            $table->string('Bank_Name');
+            $table->string('IFSC');
+            $table->string('Account_Type');
+            $table->string('Account_Number');
             $table->timestamps();
         });
     }
