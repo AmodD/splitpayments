@@ -41,4 +41,9 @@ class Team extends JetstreamTeam
         'updated' => TeamUpdated::class,
         'deleted' => TeamDeleted::class,
     ];
+
+    public function submerchants(): HasMany
+    {
+        return $this->hasMany(Submerchant::class);
+    }
 }
