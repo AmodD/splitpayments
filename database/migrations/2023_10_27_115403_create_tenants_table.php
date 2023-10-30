@@ -11,16 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('submerchants', function (Blueprint $table) {
+        Schema::create('tenants', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('tenant_id');
-            $table->foreignId('paymentgateway_id');
-            $table->string('dba_name');
-            $table->string('gstn');
-            $table->string('bank_name');
-            $table->string('ifsc');
-            $table->string('account_type');
-            $table->string('account_number');
+            $table->ulid('ulid');
+            $table->string('name');
+            $table->string('message_on_modal');
+            $table->string('return_url');
+            $table->string('return_url_message');
+            $table->string('request_url');
+            $table->string('secret');
             $table->string('status');
             $table->timestamps();
         });
@@ -31,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('submerchants');
+        Schema::dropIfExists('tenants');
     }
 };

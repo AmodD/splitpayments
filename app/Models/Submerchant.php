@@ -18,8 +18,13 @@ class Submerchant extends Model
         'Account_Number',
     ];
 
-    public function team(): BelongsTo
+    public function tenant(): BelongsTo
     {
-        return $this->belongsTo(Team::class);
+        return $this->belongsTo(Tenant::class);
+    }
+
+    public function paymentgateway(): BelongsTo
+    {
+        return $this->belongsTo(Paymentgateway::class);
     }
 }
