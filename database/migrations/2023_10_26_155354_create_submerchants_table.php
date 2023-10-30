@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('tenant_id');
             $table->foreignId('paymentgateway_id');
+            $table->string('mid',9);
+            $table->string('tid',14);
             $table->string('dba_name');
             $table->string('gstn');
             $table->string('bank_name');
