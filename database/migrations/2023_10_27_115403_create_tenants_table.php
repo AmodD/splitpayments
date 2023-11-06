@@ -15,10 +15,10 @@ return new class extends Migration
             $table->id();
             $table->ulid('ulid');
             $table->string('name');
-            $table->string('message_on_modal');
-            $table->string('return_url');
-            $table->string('return_url_message');
-            $table->string('request_url');
+            $table->string('message_on_modal')->nullable();
+            $table->string('return_url')->nullable();
+            $table->string('return_url_message')->nullable();
+            $table->string('request_url')->nullable();
             $table->string('secret');
             $table->string('status');
             $table->timestamps();

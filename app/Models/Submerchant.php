@@ -10,12 +10,15 @@ class Submerchant extends Model
     use HasFactory;
     
     protected $fillable = [
-        'DBA_Name',
-        'GSTN',
-        'Bank_Name',
-        'IFSC',
-        'Account_Type',
-        'Account_Number',
+      'tenant_id',
+      'paymentgateway_id',
+      'status',
+        'dba_name',
+        'gstn',
+        'bank_name',
+        'ifsc',
+        'account_type',
+        'account_number',
     ];
 
     public function tenant(): BelongsTo
