@@ -23,26 +23,26 @@ return new class extends Migration
             $table->string('currency');
             $table->string('mid',9);
             $table->string('tid',14);
-            $table->string('productid');
-            $table->string('paymentmethod'); // credit , debit , prepaid , UPI, EMI 
-            $table->string('externalpaymentreference',256); // unique from PG
-            $table->string('externaltenantreference',256); // unique from tenant
-            $table->string('latitude',128); 
-            $table->string('longitude',128); 
-            $table->string('ipaddress');
-            $table->string('useragent');
-            $table->string('acceptheader');
-            $table->string('fingerprintid');
-            $table->string('browsertz');
-            $table->string('browsercoulurdepth');
-            $table->string('browserjavaenabled');
-            $table->string('browserscreenheight');
-            $table->string('browserscreenwidth');
-            $table->string('browserlanguage');
-            $table->string('browserjavascriptenabled');
-            $table->timestamp('payment_at');
-            $table->timestamp('tenant_at');
-            $table->timestamp('validity_at');
+            $table->string('productid')->nullable();
+            $table->string('paymentmethod')->nullable(); // credit , debit , prepaid , UPI, EMI 
+            $table->string('externalpaymentreference',256)->nullable(); // unique from PG
+            $table->string('externaltenantreference',256)->nullable(); // unique from tenant
+            $table->string('latitude',128)->nullable(); 
+            $table->string('longitude',128)->nullable(); 
+            $table->string('ipaddress')->nullable();
+            $table->string('useragent')->nullable();
+            $table->string('acceptheader')->nullable();
+            $table->string('fingerprintid')->nullable();
+            $table->string('browsertz')->nullable();
+            $table->string('browsercoulurdepth')->nullable();
+            $table->string('browserjavaenabled')->nullable();
+            $table->string('browserscreenheight')->nullable();
+            $table->string('browserscreenwidth')->nullable();
+            $table->string('browserlanguage')->nullable();
+            $table->string('browserjavascriptenabled')->nullable();
+            $table->timestamp('payment_at')->nullable();
+            $table->timestamp('tenant_at')->nullable();
+            $table->timestamp('validity_at');->nullable()
             $table->timestamps();
         });
     }
