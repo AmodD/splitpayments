@@ -20,7 +20,9 @@ Route::get('/', function () {
 });
 
 Route::get('/wh/transactions/status', function () {
-    return "success";
+  return response()->json([
+    'status' => 'success',
+]);
 });
 
 Route::middleware([
