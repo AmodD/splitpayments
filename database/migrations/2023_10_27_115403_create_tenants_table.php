@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('tenants', function (Blueprint $table) {
             $table->id();
-            $table->ulid('ulid');
+            $table->string('ulid');
             $table->string('name');
             $table->string('message_on_modal')->nullable();
             $table->string('return_url')->nullable();
