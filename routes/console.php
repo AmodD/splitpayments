@@ -135,3 +135,19 @@ Artisan::command('splitpay:activate-submerchant {submerchantid}', function (stri
     }
 
 })->purpose('Activate status of a sub-Merchant => submerchantid');
+
+Artisan::command('splitpay:activate-tenant {tenantid}', function (string $tenantid) {
+
+    $tenant = Tenant::find($tenantid);
+    if(!$tenant) { 
+      $this->info("No Tenant with {$tenantid} ");
+    }
+    else {  
+      $tenant->status = 'active';
+
+      $tenant->save();
+
+      $this->info("Activated Tenant {$tenant->name} ");
+    }
+
+})->purpose('Activate status of a Tenant => tenantid');

@@ -15,6 +15,10 @@ use App\Livewire\CreateSubmerchant;
 |
 */
 
+Route::middleware('throttle:2,1')->get('/test', function () {
+        return "testing";
+});
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -35,7 +39,7 @@ Route::middleware([
     })->name('dashboard');
 });
 
-Route::get('/sdk/registration', CreateSubmerchant::class);
+Route::middleware('throttle:20,1')->get('/sdk/registration', CreateSubmerchant::class);
 Route::get('/sdk/thankyou', function () { return 'Successfully created merchant with status as INACTIVE . Pending Verification !';});
 
 Route::resource('submerchants', SubmerchantController::class);

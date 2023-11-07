@@ -6,11 +6,12 @@ use Livewire\Attributes\Computed;
 use Livewire\Component;
 use App\Models\Submerchant;
 use App\Models\Tenant;
+use Livewire\Attributes\Url;
 
 class CreateSubmerchant extends Component
 {
      #[Url(as: 't')]
-    public $tenantulid;
+    public $tenantulid = '';
 
      #[Url(as: 'm')]
     public $tenantsubmerchantid = '';
@@ -29,7 +30,7 @@ class CreateSubmerchant extends Component
     #[Computed]
     public function tenant()
     {
-        return Tenant::find(1);
+        return Tenant::where('ulid', $this->tenantulid)->first();
     }
 
     public function save()
@@ -43,6 +44,13 @@ class CreateSubmerchant extends Component
 
     public function render()
     {
+        if(!$this->tenantulid) return '<div>Please contact the admin. Missing Tenant ID for SPLITPAYMENTS !</div>';
+        if(!$this->tenantsubmerchantid) return '<div>Please contact the admin. Missing Unique Sub-Merchant Reference ID for SPLITPAYMENTS !</div>';
+
+        if(!$this->tenant) return '<div>Please contact the admin. Incorrect Tenant ID for SPLITPAYMENTS !</div>';
+
+        if($this->tenant->status == 'inactive') return '<div>Please contact SPLITPAYMENTS admin. '.$this->tenant->name.' is INACTIVE !</div>';
+
         return view('livewire.create-submerchant');
     }
 }
