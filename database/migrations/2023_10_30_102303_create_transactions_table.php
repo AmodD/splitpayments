@@ -42,7 +42,7 @@ return new class extends Migration
             $table->string('browserjavascriptenabled')->nullable();
             $table->timestamp('payment_at')->nullable();
             $table->timestamp('tenant_at')->nullable();
-            $table->timestamp('validity_at');->nullable()
+            $table->timestamp('validity_at')->nullable();
             $table->timestamps();
         });
     }
