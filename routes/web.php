@@ -19,6 +19,10 @@ Route::middleware('throttle:2,1')->get('/test', function () {
         return "testing";
 });
 
+Route::get('/landing', function () {
+    return view('landing');
+});
+
 Route::get('/', function () {
     return view('welcome');
 });
