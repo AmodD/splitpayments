@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreSubmerchantRequest;
 use App\Http\Requests\UpdateSubmerchantRequest;
 use App\Models\Submerchant;
+use App\Livewire\IndexSubmerchant;
 
 class SubmerchantController extends Controller
 {
@@ -13,7 +14,6 @@ class SubmerchantController extends Controller
      */
     public function index()
     {
-        //
     }
 
     /**
@@ -61,6 +61,6 @@ class SubmerchantController extends Controller
      */
     public function destroy(Submerchant $submerchant)
     {
-        //
+        $submerchant->delete();
     }
 }

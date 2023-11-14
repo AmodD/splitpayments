@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SubmerchantController;
 use App\Livewire\CreateSubmerchant;
+use App\Livewire\IndexSubmerchant;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,10 +44,13 @@ Route::middleware([
     })->name('dashboard');
 });
 
+
 Route::middleware('throttle:20,1')->get('/sdk/registration', CreateSubmerchant::class);
 Route::get('/sdk/thankyou', function () { return 'Successfully created merchant with status as INACTIVE . Pending Verification !';});
 
-Route::resource('submerchants', SubmerchantController::class);
+Route::get('submerchants', IndexSubmerchant::class)->name('submerchants.index');
+
+//Route::resource('submerchants', SubmerchantController::class)->name('submerchants', 'submerchants');
 
 //Route::controller(SubmerchantController::class)->group(function () {
 //    Route::get('/submerchants/{id}', 'show');
