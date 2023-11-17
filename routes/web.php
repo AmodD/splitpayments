@@ -39,16 +39,15 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', function () { return view('dashboard'); })->name('dashboard');
+    Route::get('/submerchants', IndexSubmerchant::class)->name('submerchants.index');
 });
 
+    Route::get('/submerchants/{submerchant}', [SubmerchantController::class,'show'])->name('submerchants.show');
 
-Route::middleware('throttle:20,1')->get('/sdk/registration', CreateSubmerchant::class);
-Route::get('/sdk/thankyou', function () { return 'Successfully created merchant with status as INACTIVE . Pending Verification !';});
+Route::middleware('throttle:20,1')->get('/sdk/registration', CreateSubmerchant::class)->name('sdk');
+Route::get('/sdk/thankyou', function () { return 'Successfully created merchant with status as INACTIVE . Pending Verification !';})->name('sdk');
 
-Route::get('submerchants', IndexSubmerchant::class)->name('submerchants.index');
 
 //Route::resource('submerchants', SubmerchantController::class)->name('submerchants', 'submerchants');
 

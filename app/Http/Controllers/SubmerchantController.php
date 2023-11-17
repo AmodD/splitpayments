@@ -37,7 +37,7 @@ class SubmerchantController extends Controller
      */
     public function show(Submerchant $submerchant)
     {
-        //
+      return view('submerchant', compact('submerchant'));
     }
 
     /**
