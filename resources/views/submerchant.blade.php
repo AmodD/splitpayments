@@ -23,7 +23,7 @@ SUB MERCHANT
     <div class="py-12">
 
  <div class="container mx-auto">
-    <table class="min-w-full">
+    <table class="min-w-min">
       <tbody>
         <!-- Row 1 -->
         <tr>
@@ -33,14 +33,14 @@ SUB MERCHANT
 
         <!-- Row 2 -->
         <tr>
-          <td class="py-2 px-4 border-b font-semibold">Tenant ID</td>
-          <td class="py-2 px-4 border-b">{{$submerchant->tenant_id}}</td>
+          <td class="py-2 px-4 border-b font-semibold">Tenant ID / Name</td>
+          <td class="py-2 px-4 border-b">{{$submerchant->tenant_id}} / {{$submerchant->tenant->name}}</td>
         </tr>
 
         <!-- Row 3 -->
         <tr>
-          <td class="py-2 px-4 border-b font-semibold">Payment Gateway</td>
-          <td class="py-2 px-4 border-b">{{$submerchant->paymentgateway_id}}</td>
+          <td class="py-2 px-4 border-b font-semibold">Payment Gateway ID / Name</td>
+          <td class="py-2 px-4 border-b">{{$submerchant->paymentgateway_id}} / {{$submerchant->paymentgateway->name}}</td>
         </tr>
 
         <!-- Row 4 -->

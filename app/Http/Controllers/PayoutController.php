@@ -53,7 +53,6 @@ class PayoutController extends Controller
      */
     public function update(UpdatePayoutRequest $request, Payout $payout)
     {
-        //
     }
 
     /**
@@ -61,6 +60,6 @@ class PayoutController extends Controller
      */
     public function destroy(Payout $payout)
     {
-        //
+        
     }
 }
