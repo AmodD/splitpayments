@@ -49,7 +49,7 @@ Route::middleware([
 
 Route::middleware('throttle:20,1')->get('/sdk/registration', CreateSubmerchant::class)->name('sdk');
 Route::get('/sdk/thankyou', function () { return 'Successfully created merchant with status as INACTIVE . Pending Verification !';})->name('sdk');
-
+Route::get('/sdk/transaction', function () { return 'Successfully created transaction !';})->name('sdk');
 
 //Route::resource('submerchants', SubmerchantController::class)->name('submerchants', 'submerchants');
 

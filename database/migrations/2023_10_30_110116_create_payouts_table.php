@@ -14,7 +14,9 @@ return new class extends Migration
         Schema::create('payouts', function (Blueprint $table) {
             $table->id();
             $table->foreignId('transaction_id');
-            $table->bigInteger('amount'); // in indian paise
+            $table->string('payoutmerchantid'); // payout merchant id
+            $table->bigInteger('payoutamount'); // in indian paise
+            $table->bigInteger('totaltransactionamount'); // in indian paise
             $table->string('status');
             $table->timestamps();
         });
