@@ -9,19 +9,10 @@
 	<meta name="author" content="">
 	<link rel="icon" href="index_folder/favicon.ico">
 	<title>Billdesk SDK</title>
-<script>
-function doMe()
-{
-  window.open(loadXMLDoc(), '_blank');
-}
-
-</script>
-
-
 
 </head>
 
-<body onLoad="doMe();">
+<body onLoad="loadXMLDoc();">
 	<div class="container">
 <!--		<div class="jumbotron mt-3">
 			<h1>BillDesk SDK</h1>
