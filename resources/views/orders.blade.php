@@ -9,15 +9,25 @@
 	<meta name="author" content="">
 	<link rel="icon" href="index_folder/favicon.ico">
 	<title>Billdesk SDK</title>
+<script>
+function doMe()
+{
+  window.open(loadXMLDoc(), '_blank');
+}
+
+</script>
+
+
 
 </head>
 
-<body>
+<body onLoad="doMe();">
 	<div class="container">
-		<div class="jumbotron mt-3">
+<!--		<div class="jumbotron mt-3">
 			<h1>BillDesk SDK</h1>
 			<a class="btn btn-lg btn-primary" href="#" onclick="loadXMLDoc()" role="button">Launch SDK »</a>
-		</div>
+                </div>
+-->
 		<div id="spinner" style="display: none;" class="mt-3 text-center">
 			<div class="spinner-border" role="status" style="width: 5rem; height: 5rem;">
 				<span class="sr-only">Loading...</span>
