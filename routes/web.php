@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SubmerchantController;
+use App\Http\Controllers\OrderController;
 use App\Livewire\CreateSubmerchant;
 use App\Livewire\IndexSubmerchant;
 
@@ -49,7 +50,8 @@ Route::middleware([
 
 Route::middleware('throttle:20,1')->get('/sdk/registration', CreateSubmerchant::class)->name('sdk');
 Route::get('/sdk/thankyou', function () { return 'Successfully created merchant with status as INACTIVE . Pending Verification !';})->name('sdk');
-Route::get('/sdk/orders/create', function () { return 'Successfully created order in splitpayments and initiated a transaction in payment gateway  !';})->name('sdk');
+Route::get('/sdk/v0/orders/create', function () { return 'Successfully created order in splitpayments and initiated a transaction in payment gateway  !';})->name('sdk');
+Route::get('/sdk/v1/orders/create',[OrderController::class,'create'])->name('sdk');
 
 //Route::resource('submerchants', SubmerchantController::class)->name('submerchants', 'submerchants');
 
