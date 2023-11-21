@@ -11,9 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('tenants', function (Blueprint $table) {
-         $table->string('ulid', 100)->change();
-         $table->string('secret', 100)->change();
+        Schema::create('configurations', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('paymentgateway_id');
+            $table->foreignId('submerchant_id');
+            $table->foreignId('tenant_id');
+            $table->timestamps();
         });
     }
 
@@ -22,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::dropIfExists('configurations');
     }
 };

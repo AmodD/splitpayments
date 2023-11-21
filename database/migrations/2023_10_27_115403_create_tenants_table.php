@@ -13,14 +13,14 @@ return new class extends Migration
     {
         Schema::create('tenants', function (Blueprint $table) {
             $table->id();
-            $table->ulid('ulid');
+            $table->ulid('ulid',100)->unique();
             $table->string('name');
             $table->string('message_on_modal')->nullable();
             $table->string('return_url')->nullable();
             $table->string('return_url_message')->nullable();
             $table->string('request_url')->nullable();
-            $table->string('secret');
-            $table->string('status');
+            $table->string('secret',100);
+            $table->string('status')->index();
             $table->timestamps();
         });
     }

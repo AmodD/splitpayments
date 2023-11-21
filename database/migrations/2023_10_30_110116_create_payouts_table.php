@@ -14,11 +14,18 @@ return new class extends Migration
         Schema::create('payouts', function (Blueprint $table) {
             $table->id();
             $table->foreignId('transaction_id');
-            $table->string('payoutmerchantid'); // payout merchant id
+            $table->foreignId('paymentgateway_id');
+            $table->foreignId('submerchant_id');
+            $table->foreignId('tenant_id');
             $table->bigInteger('payoutamount'); // in indian paise
             $table->bigInteger('totaltransactionamount'); // in indian paise
-            $table->string('status');
+            $table->string('status')->index();
+            $table->string('externalpaymentgatewayreference',256)->nullable()->unique(); // unique from PG
+            $table->string('externaltenantreference',256)->nullable()->unique(); // unique from tenant
             $table->timestamps();
+
+//            $table->primary(['tenant_id', 'paymentgateway_id']);
+//            $table->primary(['tenant_id', 'submerchant_id']);
         });
     }
 

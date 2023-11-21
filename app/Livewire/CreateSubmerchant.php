@@ -14,7 +14,7 @@ class CreateSubmerchant extends Component
     public $tenantulid = '';
 
      #[Url(as: 'm')]
-    public $tenantsubmerchantid = '';
+    public $externaltenantreference = '';
 
     public $tenant_id = 1;
     public $paymentgateway_id = 1;
@@ -36,7 +36,7 @@ class CreateSubmerchant extends Component
     public function save()
     {
         Submerchant::create(
-            $this->only(['dba_name','gstn','bank_name','ifsc','account_type','account_number','tenant_id','paymentgateway_id','status'])
+            $this->only(['dba_name','gstn','bank_name','ifsc','account_type','account_number','tenant_id','paymentgateway_id','status','externaltenantreference'])
         );
  
         return $this->redirect('/sdk/thankyou');
@@ -45,7 +45,7 @@ class CreateSubmerchant extends Component
     public function render()
     {
         if(!$this->tenantulid) return '<div>Please contact the admin. Missing Tenant ID for SPLITPAYMENTS !</div>';
-        if(!$this->tenantsubmerchantid) return '<div>Please contact the admin. Missing Unique Sub-Merchant Reference ID for SPLITPAYMENTS !</div>';
+        if(!$this->externaltenantreference) return '<div>Please contact the admin. Missing Unique Sub-Merchant Reference ID for SPLITPAYMENTS !</div>';
 
         if(!$this->tenant) return '<div>Please contact the admin. Incorrect Tenant ID for SPLITPAYMENTS !</div>';
 

@@ -11,16 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('transactionvalidities', function (Blueprint $table) {
+        Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->foreignId('transaction_id');
+            $table->string('consumerid')->nullable();
             $table->foreignId('paymentgateway_id');
             $table->foreignId('submerchant_id');
             $table->foreignId('tenant_id');
-            $table->string('externalpaymentreference',256)->nullable()->unique(); // unique from PG
-            $table->string('externaltenantreference',256)->nullable()->unique(); // unique from tenant
-            $table->timestamp('pgexpiryat')->nullable();
-            $table->timestamp('tenantexpityat')->nullable();
+            $table->string('externalpaymentgatewayreference',256)->nullable()->unique(); // unique from PG
+            $table->string('externaltenantreference',256)->unique(); // unique from tenant
             $table->timestamps();
 
 //            $table->primary(['tenant_id', 'paymentgateway_id']);
@@ -33,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('transactionvalidities');
+        Schema::dropIfExists('orders');
     }
 };

@@ -14,13 +14,16 @@ return new class extends Migration
         Schema::create('transactionstatuses', function (Blueprint $table) {
             $table->id();
             $table->foreignId('transaction_id');
-            $table->string('status');
+            $table->string('status')->index();
             $table->foreignId('paymentgateway_id');
             $table->foreignId('submerchant_id');
             $table->foreignId('tenant_id');
-            $table->string('externalpaymentreference',256)->nullable(); // unique from PG
-            $table->string('externaltenantreference',256)->nullable(); // unique from tenant
+            $table->string('externalpaymentgatewayreference',256)->nullable()->unique(); // unique from PG
+            $table->string('externaltenantreference',256)->nullable()->unique(); // unique from tenant
             $table->timestamps();
+
+//            $table->primary(['tenant_id', 'paymentgateway_id']);
+//            $table->primary(['tenant_id', 'submerchant_id']);
         });
     }
 

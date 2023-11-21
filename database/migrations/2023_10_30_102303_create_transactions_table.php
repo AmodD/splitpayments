@@ -13,20 +13,23 @@ return new class extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
-            $table->string('consumerid');
+            $table->string('consumerid')->nullable();
             $table->foreignId('paymentgateway_id');
             $table->foreignId('submerchant_id');
             $table->foreignId('tenant_id');
             $table->bigInteger('amount'); // in indian paise
-            $table->string('orderid');
+            $table->string('orderid')->nullable();
             $table->string('currency');
-            $table->string('mid',9); 
-            $table->string('tid',14);
+            $table->string('mid',9)->nullable(); 
+            $table->string('tid',14)->nullable();
             $table->string('productid')->nullable();
             $table->string('paymentmethod')->nullable(); // credit , debit , prepaid , UPI, EMI 
-            $table->string('externalpaymentreference',256)->nullable(); // unique from PG
-            $table->string('externaltenantreference',256)->nullable(); // unique from tenant
+            $table->string('externalpaymentgatewayreference',256)->nullable()->unique(); // unique from PG
+            $table->string('externaltenantreference',256)->nullable()->unique(); // unique from tenant
             $table->timestamps();
+
+//            $table->primary(['tenant_id', 'paymentgateway_id']);
+//            $table->primary(['tenant_id', 'submerchant_id']);
         });
     }
 

@@ -17,18 +17,19 @@ return new class extends Migration
             $table->foreignId('paymentgateway_id');
             $table->string('mid',9)->nullable();
             $table->string('tid',14)->nullable();
-            $table->string('externalpaymentreference',256)->nullable(); // unique from PG
-            $table->string('externaltenantreference',256)->nullable(); // unique from tenant
+            $table->string('externalpaymentgatewayreference',256)->nullable()->index(); // unique from PG
+            $table->string('externaltenantreference',256)->nullable()->index(); // unique from tenant
             $table->string('dba_name');
             $table->string('gstn')->nullable();
             $table->string('bank_name')->nullable();
             $table->string('ifsc')->nullable();
             $table->string('account_type')->nullable();
             $table->string('account_number')->nullable();
-            $table->string('status');
+            $table->string('status')->index();
             $table->timestamps();
-            
-            //$table->unique(['tenant_id', 'tenantsubmerchantid']);
+
+//            $table->primary(['tenant_id', 'paymentgateway_id']);
+            $table->unique(['tenant_id', 'externaltenantreference']);
         });
     }
 

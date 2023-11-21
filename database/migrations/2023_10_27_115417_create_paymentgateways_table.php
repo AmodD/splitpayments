@@ -14,7 +14,10 @@ return new class extends Migration
         Schema::create('paymentgateways', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('code');
+            $table->string('status')->index();
+            $table->string('merchantid');
+            $table->string('clientid');
+            $table->string('clientsecret');
             $table->timestamps();
         });
     }

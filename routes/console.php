@@ -38,16 +38,19 @@ Artisan::command('splitpay:create-tenant {name}', function (string $name) {
     $this->info("Created a new Tenant {$name} with  ULID as {$tenant->ulid} having secret {$tenant->secret} ");
 })->purpose('Creating a new Tenant => name');;
 
-Artisan::command('splitpay:create-pg {name} {code}', function (string $name, string $code) {
+Artisan::command('splitpay:create-pg {name} {merchantid} {clientid} {clientsecret}', function (string $name, string $merchantid, string $clientid, string $clientsecret) {
     $pg = new Paymentgateway;
       
     $pg->name = $name;
-    $pg->code = $code;
+    $pg->status = 'active';
+    $pg->merchantid = $merchantid;
+    $pg->clientid = $clientid;
+    $pg->clientsecret = $clientsecret;
 
     $pg->save();
 
-    $this->info("Created a new Payment Gateway {$name} with code as {$code} ");
-})->purpose('Creating a new Payment Gateway => name | code');;
+    $this->info("Created a new Payment Gateway {$name}");
+})->purpose('Creating a new Payment Gateway => name | merchantid | clientid | clientsecret');;
 
 
 Artisan::command('splitpay:create-submerchant {tenantid} {pgid} {name}', function (string $tenantid, string $pgid, string $name) {
@@ -63,7 +66,7 @@ Artisan::command('splitpay:create-submerchant {tenantid} {pgid} {name}', functio
 
     $smc->save();
 
-    $this->info("Created a new sub-Merchant {name} under tenant {$tenant->name} with payment gateway {$pg->name} ");
+    $this->info("Created a new sub-Merchant {$name} under tenant {$tenant->name} with payment gateway {$pg->name} ");
 })->purpose('Creating a new sub-Merchant => tenantid | pgid | name ');
 
 

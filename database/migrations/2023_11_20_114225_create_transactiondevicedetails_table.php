@@ -17,8 +17,6 @@ return new class extends Migration
             $table->foreignId('paymentgateway_id');
             $table->foreignId('submerchant_id');
             $table->foreignId('tenant_id');
-            $table->string('externalpaymentreference',256)->nullable(); // unique from PG
-            $table->string('externaltenantreference',256)->nullable(); // unique from tenant
             $table->string('latitude',128)->nullable(); 
             $table->string('longitude',128)->nullable(); 
             $table->string('ipaddress')->nullable();
@@ -26,13 +24,20 @@ return new class extends Migration
             $table->string('acceptheader')->nullable();
             $table->string('fingerprintid')->nullable();
             $table->string('browsertz')->nullable();
-            $table->string('browsercoulurdepth')->nullable();
+            $table->string('browsercolourdepth')->nullable();
             $table->string('browserjavaenabled')->nullable();
             $table->string('browserscreenheight')->nullable();
             $table->string('browserscreenwidth')->nullable();
             $table->string('browserlanguage')->nullable();
             $table->string('browserjavascriptenabled')->nullable();
+            $table->string('externalpaymentreference',256)->nullable()->unique(); // unique from PG
+            $table->string('externaltenantreference',256)->nullable()->unique(); // unique from tenant
             $table->timestamps();
+
+//            $table->primary(['tenant_id', 'paymentgateway_id']);
+//            $table->primary(['tenant_id', 'submerchant_id']);
+
+//            $table->spatialIndex('latitude', 'longitude');
         });
     }
 
