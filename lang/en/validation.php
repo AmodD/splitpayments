@@ -167,6 +167,9 @@ return [
         'attribute-name' => [
             'rule-name' => 'custom-message',
         ],
+        'body' => [
+          'required' => 'The Body in your API Request is missing.',
+        ],
     ],
 
     /*
