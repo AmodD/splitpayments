@@ -17,8 +17,8 @@ return new class extends Migration
             $table->foreignId('paymentgateway_id');
             $table->foreignId('submerchant_id');
             $table->foreignId('tenant_id');
+            $table->foreignId('order_id');
             $table->bigInteger('amount'); // in indian paise
-            $table->string('orderid')->nullable();
             $table->string('currency');
             $table->string('mid',9)->nullable(); 
             $table->string('tid',14)->nullable();

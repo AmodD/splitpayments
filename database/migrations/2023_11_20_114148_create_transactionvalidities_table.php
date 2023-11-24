@@ -19,8 +19,8 @@ return new class extends Migration
             $table->foreignId('tenant_id');
             $table->string('externalpaymentreference',256)->nullable()->unique(); // unique from PG
             $table->string('externaltenantreference',256)->nullable()->unique(); // unique from tenant
-            $table->timestamp('pgexpiryat')->nullable();
-            $table->timestamp('tenantexpityat')->nullable();
+            $table->timestamp('pg_expiry_at')->nullable();
+            $table->timestamp('tenant_expity_at')->nullable();
             $table->timestamps();
 
 //            $table->primary(['tenant_id', 'paymentgateway_id']);

@@ -20,4 +20,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 
-Route::post('/v1/prescreening',[OrderController::class,'store']);
+Route::middleware('tenantipcheck')->post('/v1/orders/create',[OrderController::class,'create']);
+//Route::post('/v1/prescreening',[OrderController::class,'store']);

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
 use App\Models\Order;
+use App\Models\Tenant;
+use App\Models\Submerchant;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
@@ -30,21 +32,87 @@ class OrderController extends Controller
         //$request->schemeAndHttpHost();
         //
         //$token = $request->bearerToken();
-        $ipAddress = $request->ip();
-           return response()->json([
-              'ipaddress' => $ipAddress,
-          ]);
 
-        if (!$request->accepts(['text/html', 'application/json'])) {
+
+        if (!$request->accepts(['application/json'])) {
            return response()->json([
               'status' => 'error',
               'data' => null,
-              'message' => 'Unacceptable header accept type. Only text/html and application/json are supported',
-          ]);
+              'message' => 'ER48001',
+          ], Response::HTTP_NOT_ACCEPTABLE);
         }
-      //
+
+      // Front end validations
+      $validator = Validator::make($request->all(), [
+        'tenant_id' => 'required|uuid',
+        'submerchant_reference_number' => 'required|string',
+        'order_reference_number' => 'required|string',
+        'total_order_amount' => 'required|integer',
+        'submerchant_payout_amount' => 'required|integer|lt:total_order_amount',
+        'tenant_commission_amount' => 'required|integer|lt:total_order_amount',
+        'processing_fee_amount' => 'required|integer|lt:total_order_amount',
+        'tenant_order_date_time' => 'required|date_format:Y-m-d H:i:s',
+        'message_on_modal' => 'required|string',
+        'return_url' => 'required|url',
+        'return_url_message' => 'required|string',
+      ]);
+
+      if ($validator->stopOnFirstFailure()->fails()) {    
+           return response()->json([
+              'status' => 'error',
+              'data' => null,
+              'message' => $validator->messages()->first(),
+          ], Response::HTTP_BAD_REQUEST);
+      }
+      
+      if ($request->total_order_amount != ($request->submerchant_payout_amount + $request->tenant_commission_amount + $request->processing_fee_amount)) { 
+           return response()->json([
+              'status' => 'error',
+              'data' => null,
+              'message' => "ER48023",
+          ], Response::HTTP_BAD_REQUEST);
+      }
+
+     // Back end validations 
+      $tenant = Tenant::with('submerchants')->where('uuid', $request->tenant_id)->first();
+
+      if(!$tenant) {
+        return response()->json([
+              'status' => 'error',
+              'data' => null,
+              'message' => 'ER48004',
+          ], Response::HTTP_NOT_FOUND);
+      }
+
+      if($tenant->status != 'active') {
+        return response()->json([
+              'status' => 'error',
+              'data' => null,
+              'message' => 'ER48005',
+          ], Response::HTTP_CONFLICT);
+      }
+
+      $submerchant = $tenant->submerchants()->where('externaltenantreference', $request->submerchant_reference_number)->first();
+      
+      if(!$submerchant) {
+        return response()->json([
+              'status' => 'error',
+              'data' => null,
+              'message' => 'ER48008',
+          ], Response::HTTP_NOT_FOUND);
+      }
+
+      if($submerchant->status != 'active') {
+        return response()->json([
+              'status' => 'error',
+              'data' => null,
+              'message' => 'ER48009',
+          ], Response::HTTP_CONFLICT);
+      }
+
+
       // step 2 - store order in db
-      $this->store($request);
+      return $this->store($request,$tenant,$submerchant);
       // step 3 - generate the jws
       //
       // step 4 - call the create order api
@@ -53,46 +121,41 @@ class OrderController extends Controller
       //
       // step 6 - redirect to order page
 
-      return view('orders');
+      //return view('orders');
     }
 
     /**
      * Store a newly created resource in storage.
      */
     //public function store(StoreOrderRequest $request): RedirectResponse
-    public function store(Request $request)
+    public function store(Request $request,Tenant $tenant,Submerchant $submerchant)
     {
-        if (!$request->accepts(['application/json'])) {
-           return response()->json([
-              'status' => 'error',
-              'data' => null,
-              'message' => 'Unacceptable Header Accept Key - Value. Only application/json is supported',
-          ]);
-        }
+      $order = new Order();
 
-      $ipAddress = $request->ip();
+      $order->paymentgateway_id = 1;
+      $order->submerchant_id = $submerchant->id;
+      $order->tenant_id = $tenant->id;
 
-//      $validated = $request->validate([
-//        'body' => 'required',
-//    ]);
-      $validator = Validator::make($request->all(), [
-//        'body' => 'required',
-        'tenantid' => 'required|ulid',
-      ]);
+      $order->total_order_amount = $request->total_order_amount;
+      $order->submerchant_payout_amount = $request->submerchant_payout_amount;
+      $order->tenant_commission_amount = $request->tenant_commission_amount;
+      $order->processing_fee_amount = $request->processing_fee_amount;
+      
+      $order->tenant_order_date_time = $request->tenant_order_date_time;
+      $order->message_on_modal = $request->message_on_modal;
+      $order->return_url = $request->return_url;
+      $order->return_url_message = $request->return_url_message;
 
+      $order->externaltenantreference = $request->order_reference_number;
 
-      if ($validator->fails()) {    
-//        return response()->json($validator->messages(), Response::HTTP_BAD_REQUEST);
-           return response()->json([
-              'status' => 'error',
-              'data' => null,
-              'message' => $validator->messages()->first(),
-          ], Response::HTTP_BAD_REQUEST);
-      }
+      $order->save();
 
-        return response()->json([
-              'ipaddress' => $ipAddress,
-          ]);
+      return response()->json([
+              'status' => 'success',
+              'data' => 'SPO48'.sprintf("%07d", $order->id),
+              'message' => 'SplitPayments Order Reference Number',
+          ], Response::HTTP_OK);
+
 
     }
 

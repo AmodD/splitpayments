@@ -28,14 +28,14 @@ Artisan::command('inspire', function () {
 Artisan::command('splitpay:create-tenant {name}', function (string $name) {
     $tenant = new Tenant;
       
-    $tenant->ulid = Str::ulid()->toRfc4122();
+    $tenant->uuid = Str::ulid()->toRfc4122();
     $tenant->name = $name;
     $tenant->secret = (string) Str::ulid();
     $tenant->status = 'inactive';
 
     $tenant->save();
 
-    $this->info("Created a new Tenant {$name} with  ULID as {$tenant->ulid} having secret {$tenant->secret} ");
+    $this->info("Created a new Tenant {$name} with  UUID as {$tenant->uuid} having secret {$tenant->secret} ");
 })->purpose('Creating a new Tenant => name');;
 
 Artisan::command('splitpay:create-pg {name} {merchantid} {clientid} {clientsecret}', function (string $name, string $merchantid, string $clientid, string $clientsecret) {
@@ -53,7 +53,7 @@ Artisan::command('splitpay:create-pg {name} {merchantid} {clientid} {clientsecre
 })->purpose('Creating a new Payment Gateway => name | merchantid | clientid | clientsecret');;
 
 
-Artisan::command('splitpay:create-submerchant {tenantid} {pgid} {name}', function (string $tenantid, string $pgid, string $name) {
+Artisan::command('splitpay:create-submerchant {tenantid} {pgid} {name} {refno}', function (string $tenantid, string $pgid, string $name, string $refno) {
     $smc = new Submerchant;
 
     $tenant = Tenant::find($tenantid);
@@ -62,12 +62,13 @@ Artisan::command('splitpay:create-submerchant {tenantid} {pgid} {name}', functio
     $smc->tenant_id = $tenantid;
     $smc->paymentgateway_id = $pgid;
     $smc->dba_name = $name;
+    $smc->externaltenantreference = $refno;
     $smc->status = 'inactive';
 
     $smc->save();
 
     $this->info("Created a new sub-Merchant {$name} under tenant {$tenant->name} with payment gateway {$pg->name} ");
-})->purpose('Creating a new sub-Merchant => tenantid | pgid | name ');
+})->purpose('Creating a new sub-Merchant => tenantid | pgid | name | submerchant reference number');
 
 
 Artisan::command('splitpay:update-submerchant-bankdetails {submerchantid} {bankname} {ifsc} {accounttype} {accountnumber}', function (string $submerchantid, string $bankname, string $ifsc, string $accounttype, string $accountnumber) {

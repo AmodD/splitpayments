@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('mid',9)->nullable();
             $table->string('tid',14)->nullable();
             $table->string('externalpaymentgatewayreference',256)->nullable()->index(); // unique from PG
-            $table->string('externaltenantreference',256)->nullable()->index(); // unique from tenant
+            $table->string('externaltenantreference',256)->index(); // unique from tenant
             $table->string('dba_name');
             $table->string('gstn')->nullable();
             $table->string('bank_name')->nullable();

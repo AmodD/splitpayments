@@ -167,8 +167,36 @@ return [
         'attribute-name' => [
             'rule-name' => 'custom-message',
         ],
-        'body' => [
-          'required' => 'The Body in your API Request is missing.',
+        'tenant_id' => [
+          'required' => 'ER48002',
+          'uuid' => 'ER48003',
+        ],
+        'submerchant_reference_number' => [
+          'required' => 'ER48006',
+          'string' => 'ER48007',
+        ],
+        'order_reference_number' => [
+          'required' => 'ER48010',
+          'string' => 'ER48011',
+        ],
+        'total_order_amount' => [
+          'required' => 'ER48012',
+          'integer' => 'ER48013',
+        ],
+        'submerchant_payout_amount' => [
+          'required' => 'ER48014',
+          'integer' => 'ER48015',
+          'lt' => 'ER48020',
+        ],
+        'tenant_commission_amount' => [
+          'required' => 'ER48016',
+          'integer' => 'ER48017',
+          'lt' => 'ER48021',
+        ],
+        'processing_fee_amount' => [
+          'required' => 'ER48018',
+          'integer' => 'ER48019',
+          'lt' => 'ER48022',
         ],
     ],
 
