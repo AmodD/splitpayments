@@ -3,6 +3,11 @@
 namespace App\Actions;
 use App\Models\Order;
 use Illuminate\Http\Request;
+//require 'vendor/autoload.php'; // Make sure to include the autoloader from lcobucci/jwt
+
+use Lcobucci\JWT\Parser;
+use Lcobucci\JWT\ValidationData;
+use Lcobucci\JWT\Signer\Hmac\Sha256;
 
 class GenerateJWS
 {
@@ -63,6 +68,29 @@ class GenerateJWS
     $jwt = $base64UrlHeader . "." . $base64UrlPayload . "." . $base64UrlSignature;
 
     return $jwt;
+  }
+
+  public static function decrypt($encryptedSignedMessage)
+  {
+    $verificationKey = env('PG_BD_CLIENT_SECRET'); // secret key currently hard coded for Bill Desk PG
+    $parser = new Parser();
+    $jwsObject = $parser->parse($encryptedSignedMessage);
+
+    $clientId = $jwsObject->getHeader('clientid');
+    Log::info("clientId = " . $clientId);
+    //echo "clientId = " . $clientId . PHP_EOL;
+
+    $signer = new Sha256();
+    $verificationData = new ValidationData();
+    $verificationData->setIssuer($clientId); // Set any other necessary validation data
+
+    $isVerified = $jwsObject->verify($signer, $verificationKey) && $jwsObject->validate($verificationData);
+
+    Log::info("is valid " . ($isVerified ? "true" : "false"));
+    //echo "is valid " . ($isVerified ? "true" : "false") . PHP_EOL;
+
+    $message = $jwsObject->getClaim('payload');
+    return $message;
   }
 
   public static function verifyAndDecryptJWSWithHMAC($jwt)

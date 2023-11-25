@@ -67,9 +67,8 @@ class TransactionController extends Controller
       $pgpayload = null;
 
       if(Str::contains($jwsresponse, 'error')) return $jwsresponse;
-      else $pgpayload = GenerateJWS::verifyAndDecryptJWSWithHMAC($jwsresponse);
-      
-
+      //else $pgpayload = GenerateJWS::verifyAndDecryptJWSWithHMAC($jwsresponse);
+      else $pgpayload = GenerateJWS::decrypt($jwsresponse);
 
       return $pgpayload;
 
