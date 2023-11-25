@@ -78,6 +78,7 @@ class TransactionController extends Controller
 
       // step 5 - from response get required attributes
       $pgpayload = null;
+      dd($jwsresponse);
 
       if(Str::contains($jwsresponse, 'error')) return $jwsresponse;
       // check if response is 200
@@ -95,7 +96,6 @@ class TransactionController extends Controller
           'message' => 'ER48031',
         ], Response::HTTP_INTERNAL_SERVER_ERROR);
 
-      dd($jwsresponse);
       $pgpayload = GenerateJWS::decryptPG($jwsresponse);
 
       //else $pgpayload = GenerateJWS::decrypt($jwsresponse);
