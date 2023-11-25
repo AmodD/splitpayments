@@ -63,7 +63,9 @@ class TransactionController extends Controller
           $jwsrequest, 'application/jose'
       )->post('https://pguat.billdesk.io/payments/ve1_2/orders/create');
 
-      //return $jwsresponse;
+
+
+      return $jwsresponse;
       // step 5 - from response get required attributes
       $pgpayload = GenerateJWS::verifyAndDecryptJWSWithHMAC($jwsresponse);
 
