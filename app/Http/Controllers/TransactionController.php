@@ -53,14 +53,14 @@ class TransactionController extends Controller
       $order = Order::where('id', (int) Str::substr($request->order_id, 5, 12))->first();
 
       // step 3 - generate the jws
-      $jwsrequest = GenerateJWS::generate($order,$request);
+      $jwsrequest = GenerateJWS::generate($order,$request->ip(),$request->userAgent(),$request->header('accept_header'));
 
      // return $jws;
 
 
       // step 4 - call the PG create order api
       $jwsresponse = Http::withHeaders([
-          'content-type' => 'application/jose',
+          //'content-type' => 'application/jose',
           'accept' => 'application/jose',
           'bd-timestamp' => time(),
           'bd-traceid' => $request->order_id,

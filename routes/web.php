@@ -6,7 +6,7 @@ use App\Http\Controllers\OrderController;
 use App\Livewire\CreateSubmerchant;
 use App\Livewire\IndexSubmerchant;
 use App\Http\Controllers\TransactionController;
-
+use Illuminate\Http\Request;
 use App\Actions\GenerateJWS;
 /*
 |--------------------------------------------------------------------------
@@ -56,6 +56,42 @@ Route::get('/sdk/v0/orders/create', function () { return 'Successfully created o
 
 
 Route::get('/sdk/v1/transactions/create',[TransactionController::class,'create']);
+
+Route::get('/jws', function (Request $request) { 
+
+  if(!$request->has('order_id')) {
+    return response()->json([
+      'status' => 'error',
+      'data' => null,
+      'message' => 'order_id is required'
+    ], 400);
+  }
+
+  $orderid = $request->input('order_id');
+
+  // if orderid is integer then it is orderid else it is transactionid
+  if(is_numeric($orderid)) {
+    $order = \App\Models\Order::find($orderid);
+  } else {
+    $order = \App\Models\Order::find((int) Str::substr($orderid, 5, 12));
+  }
+
+  if(!$order) {
+    return response()->json([
+      'status' => 'error',
+      'data' => null,
+      'message' => 'order not found'
+    ], 404);
+  }
+
+    return response()->json([
+      'status' => 'success',
+      'data' => GenerateJWS::generate($order),
+      'message' => 'JWS generated successfully'
+    ], 200);
+
+
+});
 
 Route::get('/decrypt', function () { 
 

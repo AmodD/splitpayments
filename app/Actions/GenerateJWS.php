@@ -12,7 +12,7 @@ use Lcobucci\JWT\Signer\Hmac\Sha256;
 class GenerateJWS
 {
 
-  public static function generate(Order $order,Request $request)
+  public static function generate(Order $order,$ip="127.0.0.1",$user_agent="Mozilla/5.0(WindowsNT10.0;WOW64;rv:51.0)Gecko/20100101 Firefox/51.0",$accept_header="text/html")
   {
     $header = [
       'alg' => 'HS256',
@@ -40,9 +40,9 @@ class GenerateJWS
       ],
       'device' => [
         'init_channel' => 'internet',
-        'ip' => $request->ip(),
-        'user_agent' => $request->header('User-Agent'),
-        'accept_header' => $request->header('Accept'),
+        'ip' => $ip,
+        'user_agent' => $user_agent,
+        'accept_header' => $accept_header,
         'fingerprintid' => '61b12c18b5d0cf901be34a23ca64bb19',
         'browser_tz' => '-330',
         'browser_color_depth' => '32',
