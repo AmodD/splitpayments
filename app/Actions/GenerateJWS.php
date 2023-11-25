@@ -3,7 +3,7 @@
 namespace App\Actions;
 use App\Models\Order;
 use Illuminate\Http\Request;
-//require 'vendor/autoload.php'; // Make sure to include the autoloader from lcobucci/jwt
+require 'vendor/autoload.php'; // Make sure to include the autoloader from lcobucci/jwt
 
 use Lcobucci\JWT\Parser;
 use Lcobucci\JWT\ValidationData;
