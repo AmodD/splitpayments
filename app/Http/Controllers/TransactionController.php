@@ -17,6 +17,10 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Http;
 //use Illuminate\Http\Client\Response;
+use Monolog\Handler\RotatingFileHandler;
+use Monolog\Logger;
+use GuzzleHttp\MessageFormatter;
+use GuzzleHttp\Middleware;
 
 class TransactionController extends Controller
 {
@@ -52,7 +56,8 @@ class TransactionController extends Controller
       $jwsrequest = GenerateJWS::generate($order,$request);
 
      // return $jws;
-      
+
+
       // step 4 - call the PG create order api
       $jwsresponse = Http::withHeaders([
           'content-type' => 'application/jose',
@@ -61,7 +66,9 @@ class TransactionController extends Controller
           'bd-traceid' => $request->order_id,
       ])->withBody(
           $jwsrequest, 'application/jose'
-      )->post('https://pguat.billdesk.io/payments/ve1_2/orders/create');
+      )->withMiddleware(Middleware::log(with(new Logger('guzzle-log'))->pushHandler(
+                new RotatingFileHandler(storage_path('logs/guzzle-log.log'))
+            ), new MessageFormatter(MessageFormatter::DEBUG)))->post('https://pguat.billdesk.io/payments/ve1_2/orders/create');
 
       // step 5 - from response get required attributes
       $pgpayload = null;
