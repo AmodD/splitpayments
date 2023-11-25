@@ -109,7 +109,7 @@ class GenerateJWS
       $payload = json_decode(base64_decode($jwt_values[1]), true);
       return $payload;
     } else {
-//      return 
+      return json_decode(base64_decode($jwt_values[1]), true);
       return "ER48027";
     }
   }
