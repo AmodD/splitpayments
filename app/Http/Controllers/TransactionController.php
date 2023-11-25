@@ -38,22 +38,28 @@ class TransactionController extends Controller
     public function create(Request $request)
     {
       // step 1 - get the order details
-      $validator = Validator::make($request->all(), [
-        'order_id' => 'required|size:12',
-      ]);
 
-      if ($validator->fails()) {    
-           return response()->json([
-              'status' => 'error',
-              'data' => null,
-              'message' => $validator->messages(),
-          ], Response::HTTP_BAD_REQUEST);
-      }
+      $token = $request->bearerToken(); 
+      $payload = GenerateJWS::decryptTenant($token);
 
-      $order = Order::where('id', (int) Str::substr($request->order_id, 5, 12))->first();
+      if(!$payload) return response()->json([
+        'status' => 'error',
+        'data' => null,
+        'message' => 'ER48029',
+      ], Response::HTTP_UNAUTHORIZED);
+
+      $order = Order::find($payload['orderid']);
+
+      if(!$order) return response()->json([
+        'status' => 'error',
+        'data' => null,
+        'message' => 'ER48028',
+      ], Response::HTTP_NOT_FOUND);
+
+      
 
       // step 3 - generate the jws
-      $jwsrequest = GenerateJWS::generate($order,$request->ip(),$request->userAgent(),$request->header('accept_header'));
+      $jwsrequest = GenerateJWS::encryptPG($order,$request->ip(),$request->userAgent(),$request->header('accept_header'));
 
      // return $jws;
 
@@ -63,7 +69,7 @@ class TransactionController extends Controller
           //'content-type' => 'application/jose',
           'accept' => 'application/jose',
           'bd-timestamp' => time(),
-          'bd-traceid' => $request->order_id,
+          'bd-traceid' => 'SPO48'.sprintf("%07d", $order->id),
       ])->withBody(
           $jwsrequest, 'application/jose'
       )->withMiddleware(Middleware::log(with(new Logger('guzzle-log'))->pushHandler(
@@ -74,7 +80,7 @@ class TransactionController extends Controller
       $pgpayload = null;
 
       if(Str::contains($jwsresponse, 'error')) return $jwsresponse;
-      else $pgpayload = GenerateJWS::verifyAndDecryptJWSWithHMAC($jwsresponse);
+      else $pgpayload = GenerateJWS::decryptPG($jwsresponse);
       //else $pgpayload = GenerateJWS::decrypt($jwsresponse);
 
       return $pgpayload;

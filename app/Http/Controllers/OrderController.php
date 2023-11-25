@@ -10,6 +10,7 @@ use App\Models\Submerchant;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
+use App\Actions\GenerateJWS;
 
 class OrderController extends Controller
 {
@@ -140,10 +141,13 @@ class OrderController extends Controller
 
       $order->save();
 
+      // step 3 - generate JWT
+      $jws = GenerateJWS::encryptTenant($tenant->id,$submerchant->id,$order->id);
+
       return response()->json([
               'status' => 'success',
-              'data' => 'SPO48'.sprintf("%07d", $order->id),
-              'message' => 'SplitPayments Order Reference Number',
+              'data' => $jws,
+              'message' => 'SPO48'.sprintf("%07d", $order->id),
           ], Response::HTTP_OK);
 
 

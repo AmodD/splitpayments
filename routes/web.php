@@ -55,7 +55,7 @@ Route::get('/sdk/thankyou', function () { return 'Successfully created merchant 
 Route::get('/sdk/v0/orders/create', function () { return 'Successfully created order in splitpayments and initiated a transaction in payment gateway  !';})->name('sdk');
 
 
-Route::get('/sdk/v1/transactions/create',[TransactionController::class,'create']);
+Route::post('/sdk/v2/transactions/create',[TransactionController::class,'create']);
 
 Route::get('/jws', function (Request $request) { 
 
@@ -86,7 +86,7 @@ Route::get('/jws', function (Request $request) {
 
     return response()->json([
       'status' => 'success',
-      'data' => GenerateJWS::generate($order),
+      'data' => GenerateJWS::encryptPG($order),
       'message' => 'JWS generated successfully'
     ], 200);
 
@@ -95,7 +95,7 @@ Route::get('/jws', function (Request $request) {
 
 Route::get('/decrypt', function () { 
 
-  return GenerateJWS::verifyAndDecryptJWSWithHMAC('eyJhbGciOiJIUzI1NiIsImNsaWVudGlkIjoidWF0Zm9ydHYyIiwia2lkIjoiSE1BQyJ9.eyJzdGF0dXMiOjQwOSwiZXJyb3JfdHlwZSI6ImR1cGxpY2F0ZV9yZXF1ZXN0X2Vycm9yIiwiZXJyb3JfY29kZSI6IkdORFJFMDAwMSIsIm1lc3NhZ2UiOiJEdXBsaWNhdGUgcmVxdWVzdCBlcnJvciJ9.ihXE6sf_r3JfOEBLdOkzscjTSjhXdcquYZb10Oj7peg');
+  return GenerateJWS::decryptPG('eyJhbGciOiJIUzI1NiIsImNsaWVudGlkIjoidWF0Zm9ydHYyIiwia2lkIjoiSE1BQyJ9.eyJzdGF0dXMiOjQwOSwiZXJyb3JfdHlwZSI6ImR1cGxpY2F0ZV9yZXF1ZXN0X2Vycm9yIiwiZXJyb3JfY29kZSI6IkdORFJFMDAwMSIsIm1lc3NhZ2UiOiJEdXBsaWNhdGUgcmVxdWVzdCBlcnJvciJ9.ihXE6sf_r3JfOEBLdOkzscjTSjhXdcquYZb10Oj7peg');
 
 
 });

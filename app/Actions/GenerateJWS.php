@@ -3,16 +3,60 @@
 namespace App\Actions;
 use App\Models\Order;
 use Illuminate\Http\Request;
-//require 'vendor/autoload.php'; // Make sure to include the autoloader from lcobucci/jwt
 
-use Lcobucci\JWT\Parser;
-use Lcobucci\JWT\ValidationData;
-use Lcobucci\JWT\Signer\Hmac\Sha256;
 
 class GenerateJWS
 {
+  public static function encryptTenant($tenantid, $submerchantid, $orderid)
+  {
+    $header = [
+      'alg' => 'HS256',
+      'tenantid' => $tenantid,
+    ];
 
-  public static function generate(Order $order,$ip="127.0.0.1",$user_agent="Mozilla/5.0(WindowsNT10.0;WOW64;rv:51.0)Gecko/20100101 Firefox/51.0",$accept_header="text/html")
+    $payload = [
+      'submerchantid' => $submerchantid,
+      'orderid' => $orderid,
+    ];
+    
+    $header = json_encode($header);
+    $payload = json_encode($payload);
+
+    $base64UrlHeader = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($header));
+    $base64UrlPayload = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($payload));
+
+    $signature = hash_hmac('sha256', $base64UrlHeader . "." . $base64UrlPayload, env('APP_KEY'), true);
+    $base64UrlSignature = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($signature));
+
+    $jwt = $base64UrlHeader . "." . $base64UrlPayload . "." . $base64UrlSignature;
+
+    return $jwt;
+
+  }
+
+  public static function decryptTenant($jwt)
+  {
+    $secret = env('APP_KEY'); // secret key currently hard coded for Bill Desk PG
+
+    $jwt_values = explode('.', $jwt);
+    $recieved_signature = $jwt_values[2];
+    $recieved_header_and_payload = $jwt_values[0] . '.' . $jwt_values[1];
+
+    $valid_signature = hash_hmac('sha256', $recieved_header_and_payload, $secret, true);
+    $base64UrlValidSignature = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($valid_signature));
+
+    if ($base64UrlValidSignature == $recieved_signature) {
+      $header = json_decode(base64_decode($jwt_values[0]), true);
+      $payload = json_decode(base64_decode($jwt_values[1]), true);
+      return $payload;
+    } else {
+      return false;
+    }
+
+  }
+
+
+  public static function encryptPG(Order $order,$ip="127.0.0.1",$user_agent="Mozilla/5.0(WindowsNT10.0;WOW64;rv:51.0)Gecko/20100101 Firefox/51.0",$accept_header="text/html")
   {
     $header = [
       'alg' => 'HS256',
@@ -70,30 +114,8 @@ class GenerateJWS
     return $jwt;
   }
 
-  public static function decrypt($encryptedSignedMessage)
-  {
-    $verificationKey = env('PG_BD_CLIENT_SECRET'); // secret key currently hard coded for Bill Desk PG
-    $parser = new Parser();
-    $jwsObject = $parser->parse($encryptedSignedMessage);
 
-    $clientId = $jwsObject->getHeader('clientid');
-    Log::info("clientId = " . $clientId);
-    //echo "clientId = " . $clientId . PHP_EOL;
-
-    $signer = new Sha256();
-    $verificationData = new ValidationData();
-    $verificationData->setIssuer($clientId); // Set any other necessary validation data
-
-    $isVerified = $jwsObject->verify($signer, $verificationKey) && $jwsObject->validate($verificationData);
-
-    Log::info("is valid " . ($isVerified ? "true" : "false"));
-    //echo "is valid " . ($isVerified ? "true" : "false") . PHP_EOL;
-
-    $message = $jwsObject->getClaim('payload');
-    return $message;
-  }
-
-  public static function verifyAndDecryptJWSWithHMAC($jwt)
+  public static function decryptPG($jwt)
   {
     $secret = env('PG_BD_CLIENT_SECRET'); // secret key currently hard coded for Bill Desk PG
 
