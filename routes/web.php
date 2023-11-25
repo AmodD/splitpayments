@@ -7,6 +7,7 @@ use App\Livewire\CreateSubmerchant;
 use App\Livewire\IndexSubmerchant;
 use App\Http\Controllers\TransactionController;
 
+use App\Actions\GenerateJWS;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -56,6 +57,12 @@ Route::get('/sdk/v0/orders/create', function () { return 'Successfully created o
 
 Route::get('/sdk/v1/transactions/create',[TransactionController::class,'create']);
 
+Route::get('/decrypt', function () { 
+
+  return GenerateJWS::verifyAndDecryptJWSWithHMAC('eyJhbGciOiJIUzI1NiIsImNsaWVudGlkIjoidWF0Zm9ydHYyIiwia2lkIjoiSE1BQyJ9.eyJzdGF0dXMiOjQwOSwiZXJyb3JfdHlwZSI6ImR1cGxpY2F0ZV9yZXF1ZXN0X2Vycm9yIiwiZXJyb3JfY29kZSI6IkdORFJFMDAwMSIsIm1lc3NhZ2UiOiJEdXBsaWNhdGUgcmVxdWVzdCBlcnJvciJ9.ihXE6sf_r3JfOEBLdOkzscjTSjhXdcquYZb10Oj7peg');
+
+
+});
 
 //Route::resource('submerchants', SubmerchantController::class)->name('submerchants', 'submerchants');
 
