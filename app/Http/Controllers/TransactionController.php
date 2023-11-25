@@ -82,13 +82,13 @@ class TransactionController extends Controller
       if(Str::contains($jwsresponse, 'error')) return $jwsresponse;
       else {
         // check if response is 200
-        if($response->serverError()) return response()->json([
+        if($jwsresponse->serverError()) return response()->json([
           'status' => 'error',
           'data' => null,
           'message' => 'ER48030',
         ], Response::HTTP_INTERNAL_SERVER_ERROR);
 
-        if($response->clientError()) return response()->json([
+        if($jwsresponse->clientError()) return response()->json([
           'status' => 'error',
           'data' => null,
           'message' => 'ER48031',
