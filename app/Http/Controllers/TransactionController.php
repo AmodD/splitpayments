@@ -56,7 +56,7 @@ class TransactionController extends Controller
       // step 4 - call the PG create order api
       $jwsresponse = Http::withHeaders([
           'content-type' => 'application/jose',
-      //    'accept' => 'application/jose',
+          'accept' => 'application/jose',
           'bd-timestamp' => time(),
           'bd-traceid' => $request->order_id,
       ])->withBody(
