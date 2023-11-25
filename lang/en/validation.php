@@ -198,6 +198,10 @@ return [
           'integer' => 'ER48019',
           'lt' => 'ER48022',
         ],
+        'tenant_order_date_time' => [
+          'required' => 'ER48024',
+          'date_format' => 'ER48025',
+        ],
     ],
 
     /*

@@ -44,8 +44,8 @@ class CreateSubmerchant extends Component
 
     public function render()
     {
-        if(!$this->tenantulid) return '<div>Please contact the admin. Missing Tenant ID for SPLITPAYMENTS !</div>';
-        if(!$this->externaltenantreference) return '<div>Please contact the admin. Missing Unique Sub-Merchant Reference ID for SPLITPAYMENTS !</div>';
+        if(!$this->tenantulid) return '<div>ER48025</div>';
+        if(!$this->externaltenantreference) return '<div>ER48026</div>';
 
         if(!$this->tenant) return '<div>Please contact the admin. Incorrect Tenant ID for SPLITPAYMENTS !</div>';
 

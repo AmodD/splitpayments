@@ -24,8 +24,9 @@ class TenantipMiddleware
           // \Log::error('IP address is not whitelisted', ['ip address', $request->ip()]);
            return response()->json([
               'status' => 'error',
-              'data' => null,
-              'message' => 'IP Address '.$request->ip().' is not in allowed list',
+              'data' => $request->ip(),
+              //'message' => 'IP Address '.$request->ip().' is not in allowed list',
+              'message' => 'ER48024',
           ], Response::HTTP_FORBIDDEN);
 
       }

@@ -10,6 +10,13 @@ use App\Models\Transactiondevicedetail;
 use App\Models\Transactionvalidity;
 use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
+use App\Actions\GenerateJWS;
+use App\Models\Order;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Http;
+//use Illuminate\Http\Client\Response;
 
 class TransactionController extends Controller
 {
@@ -24,9 +31,47 @@ class TransactionController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+      // step 1 - get the order details
+      $validator = Validator::make($request->all(), [
+        'order_id' => 'required|size:12',
+      ]);
+
+      if ($validator->fails()) {    
+           return response()->json([
+              'status' => 'error',
+              'data' => null,
+              'message' => $validator->messages(),
+          ], Response::HTTP_BAD_REQUEST);
+      }
+
+      $order = Order::where('id', (int) Str::substr($request->order_id, 5, 12))->first();
+
+      // step 3 - generate the jws
+      $jwsrequest = GenerateJWS::generate($order,$request);
+
+     // return $jws;
+      
+      // step 4 - call the PG create order api
+      $jwsresponse = Http::withHeaders([
+          'content-type' => 'application/jose',
+          'accept' => 'application/jose',
+          'bd-timestamp' => time(),
+          'bd-traceid' => $request->order_id,
+      ])->withBody(
+          $jwsrequest, 'application/jose'
+      )->post('https://pguat.billdesk.io/payments/ve1_2/orders/create');
+
+      //return $jwsresponse;
+      // step 5 - from response get required attributes
+      $pgpayload = GenerateJWS::verifyAndDecryptJWSWithHMAC($jwsresponse);
+
+      return $pgpayload;
+
+      // step 6 - redirect to order page
+
+        return view('transactions');
     }
 
     /**

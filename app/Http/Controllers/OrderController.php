@@ -47,10 +47,10 @@ class OrderController extends Controller
         'tenant_id' => 'required|uuid',
         'submerchant_reference_number' => 'required|string',
         'order_reference_number' => 'required|string',
-        'total_order_amount' => 'required|integer',
-        'submerchant_payout_amount' => 'required|integer|lt:total_order_amount',
-        'tenant_commission_amount' => 'required|integer|lt:total_order_amount',
-        'processing_fee_amount' => 'required|integer|lt:total_order_amount',
+        'total_order_amount' => 'required|integer|numeric',
+        'submerchant_payout_amount' => 'required|integer|numeric|lt:total_order_amount',
+        'tenant_commission_amount' => 'required|integer|numeric|lt:total_order_amount',
+        'processing_fee_amount' => 'required|integer|numeric|lt:total_order_amount',
         'tenant_order_date_time' => 'required|date_format:Y-m-d H:i:s',
         'message_on_modal' => 'required|string',
         'return_url' => 'required|url',
@@ -110,18 +110,8 @@ class OrderController extends Controller
           ], Response::HTTP_CONFLICT);
       }
 
-
       // step 2 - store order in db
       return $this->store($request,$tenant,$submerchant);
-      // step 3 - generate the jws
-      //
-      // step 4 - call the create order api
-      //
-      // step 5 - from response get required attributes
-      //
-      // step 6 - redirect to order page
-
-      //return view('orders');
     }
 
     /**
