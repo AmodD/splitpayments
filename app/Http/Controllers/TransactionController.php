@@ -74,7 +74,7 @@ class TransactionController extends Controller
           $jwsrequest, 'application/jose'
       )->withMiddleware(Middleware::log(with(new Logger('guzzle-log'))->pushHandler(
                 new RotatingFileHandler(storage_path('logs/guzzle-log.log'))
-            ), new MessageFormatter(MessageFormatter::DEBUG)))->post('https://uat1.billdesk.com/u2/payments/ve1_2/orders/create');
+            ), new MessageFormatter(MessageFormatter::DEBUG)))->post('https://pguat.billdesk.io/payments/ve1_2/orders/create');
 
       // step 5 - from response get required attributes
       $pgpayload = null;
