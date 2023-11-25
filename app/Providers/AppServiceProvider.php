@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
 use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\MessageFormatter;
