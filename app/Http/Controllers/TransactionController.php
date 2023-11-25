@@ -80,7 +80,23 @@ class TransactionController extends Controller
       $pgpayload = null;
 
       if(Str::contains($jwsresponse, 'error')) return $jwsresponse;
-      else $pgpayload = GenerateJWS::decryptPG($jwsresponse);
+      else {
+        // check if response is 200
+        if($response->serverError()) return response()->json([
+          'status' => 'error',
+          'data' => null,
+          'message' => 'ER48030',
+        ], Response::HTTP_INTERNAL_SERVER_ERROR);
+
+        if($response->clientError()) return response()->json([
+          'status' => 'error',
+          'data' => null,
+          'message' => 'ER48031',
+        ], Response::HTTP_INTERNAL_SERVER_ERROR));
+
+        $pgpayload = GenerateJWS::decryptPG($jwsresponse);
+
+      }
       //else $pgpayload = GenerateJWS::decrypt($jwsresponse);
 
       return $pgpayload;
