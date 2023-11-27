@@ -48,6 +48,7 @@ class TransactionController extends Controller
 
       //$payload = openssl_decrypt($epayload, 'AES-128-CTR', env('APP_KEY'), 0, 'SPO48'.sprintf("%011d", $order->id));
       $payload = Crypt::decryptString($epayload);
+      
 
       if(!$payload) return response()->json([
         'status' => 'error',
@@ -63,6 +64,7 @@ class TransactionController extends Controller
       ], Response::HTTP_BAD_REQUEST);
 
       $payload_values = explode('~', $payload);
+      dd($payload,$payload_values);
 
       //payload_values must contain 3 values
       if(count($payload_values) != 3) return response()->json([
