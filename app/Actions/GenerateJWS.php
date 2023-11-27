@@ -26,11 +26,12 @@ class GenerateJWS
       //'order_date' => ($order->created_at), // '2021-06-01T12:00:00+05:30',
       'currency' => '356',
       'ru' => 'https://splitpayments.in/wh/transactions/status',
-      'additional_info' => 
-        [
-          'additional_info1' => 'Details1',
-          'additional_info2' => 'Details2'
-        ],
+      'additional_info' => '',
+      //'additional_info' => 
+      //  [
+      //    'additional_info1' => 'Details1',
+      //    'additional_info2' => 'Details2'
+      //  ],
       'itemcode' => 'DIRECT',
       'split_payment' => [
         [
@@ -61,8 +62,8 @@ class GenerateJWS
 
     $secret = env('PG_BD_CLIENT_SECRET'); // secret key currently hard coded for Bill Desk PG
 
-    $header = json_encode($header);
-    $payload = json_encode($payload);
+    $header = json_encode($header, JSON_UNESCAPED_SLASHES);
+    $payload = json_encode($payload, JSON_UNESCAPED_SLASHES);
     
     Log::info($header);
     Log::info($payload);
