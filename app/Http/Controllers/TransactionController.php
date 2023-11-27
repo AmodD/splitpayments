@@ -104,6 +104,13 @@ class TransactionController extends Controller
         'message' => 'ER48039',
       ], Response::HTTP_BAD_REQUEST);
 
+      // if request ip does not match order clientipaddress
+      if($request->ip() != $order->clientipaddress) return response()->json([
+        'status' => 'error',
+        'data' => null,
+        'message' => 'ER48043',
+      ], Response::HTTP_BAD_REQUEST);
+
       //if otimestamp is not numeric
       if(!is_numeric($otimestamp)) return response()->json([
         'status' => 'error',
