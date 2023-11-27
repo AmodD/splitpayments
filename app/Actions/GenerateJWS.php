@@ -1,9 +1,11 @@
 <?php
 
 namespace App\Actions;
+
 use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
 
 class GenerateJWS
 {
@@ -50,10 +52,13 @@ class GenerateJWS
         ]
     ];
 
+
     $secret = env('PG_BD_CLIENT_SECRET'); // secret key currently hard coded for Bill Desk PG
 
     $header = json_encode($header);
     $payload = json_encode($payload);
+    
+    Log::info($payload);
 
     $base64UrlHeader = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($header));
     $base64UrlPayload = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($payload));

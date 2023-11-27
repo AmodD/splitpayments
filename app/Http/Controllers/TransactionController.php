@@ -120,7 +120,7 @@ class TransactionController extends Controller
       
 
       // step 3 - generate the jws
-      $jwsrequest = GenerateJWS::encryptPG($order,$request->ip(),$request->userAgent(),$request->header('accept_header'));
+      $jwsrequest = GenerateJWS::encryptPG($order,$request->ip(),$request->userAgent(),$request->header('accept'));
 
      // return $jws;
 

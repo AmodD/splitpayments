@@ -178,6 +178,7 @@ return [
         'order_reference_number' => [
           'required' => 'ER48010',
           'string' => 'ER48011',
+          'unique' => 'ER48042',
         ],
         'total_order_amount' => [
           'required' => 'ER48012',

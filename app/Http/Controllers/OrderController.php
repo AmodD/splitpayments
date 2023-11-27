@@ -48,7 +48,7 @@ class OrderController extends Controller
       $validator = Validator::make($request->all(), [
         'tenant_id' => 'required|uuid',
         'submerchant_reference_number' => 'required|string',
-        'order_reference_number' => 'required|string',
+        'order_reference_number' => 'required|string|unique:App\Models\Order,externaltenantreference',
         'total_order_amount' => 'required|integer|numeric',
         'submerchant_payout_amount' => 'required|integer|numeric|lt:total_order_amount',
         'tenant_commission_amount' => 'required|integer|numeric|lt:total_order_amount',
