@@ -114,7 +114,7 @@ class TransactionController extends Controller
       // if timeout is greather than 10 seconds
       if((time() - $otimestamp) > env('APP_TENANT_TIMEOUT')) return response()->json([
         'status' => 'error',
-        'data' => null,
+        'data' => time() - $otimestamp,
         'message' => 'ER48040',
       ], Response::HTTP_BAD_REQUEST);
       
