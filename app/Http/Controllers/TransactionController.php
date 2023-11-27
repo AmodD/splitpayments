@@ -35,12 +35,17 @@ class TransactionController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create(Request $request)
+    public function create(Request $request, $epayload)
     {
       // step 1 - get the order details
 
-      $token = $request->bearerToken(); 
-      $payload = GenerateJWS::decryptTenant($token);
+      if(!$epayload) return response()->json([
+        'status' => 'error',
+        'data' => null,
+        'message' => 'ER48032',
+      ], Response::HTTP_BAD_REQUEST));
+
+      $payload = openssl_decrypt($epayload, 'AES-128-CTR', env('APP_KEY'), 0, env('APP_IV'));
 
       if(!$payload) return response()->json([
         'status' => 'error',
@@ -48,7 +53,41 @@ class TransactionController extends Controller
         'message' => 'ER48029',
       ], Response::HTTP_UNAUTHORIZED);
 
-      $order = Order::find($payload['orderid']);
+      // payload does not contain ~
+      if(!Str::contains($payload, '~')) return response()->json([
+        'status' => 'error',
+        'data' => null,
+        'message' => 'ER48033',
+      ], Response::HTTP_BAD_REQUEST);
+
+      $payload_values = explode('~', $payload);
+
+      //payload_values must contain 3 values
+      if(count($payload_values) != 3) return response()->json([
+        'status' => 'error',
+        'data' => null,
+        'message' => 'ER48034',
+      ], Response::HTTP_BAD_REQUEST);
+
+      $order_id = $payload_values[0];
+      $clientip = $payload_values[1];
+      $otimestamp = $payload_values[2];
+
+      // check if order id is numeric
+      if(!is_numeric($order_id)) return response()->json([
+        'status' => 'error',
+        'data' => null,
+        'message' => 'ER48035',
+      ], Response::HTTP_BAD_REQUEST);
+
+      // check if client ip is valid
+      if(!filter_var($clientip, FILTER_VALIDATE_IP)) return response()->json([
+        'status' => 'error',
+        'data' => null,
+        'message' => 'ER48036',
+      ], Response::HTTP_BAD_REQUEST);
+
+      $order = Order::find($order_id);
 
       if(!$order) return response()->json([
         'status' => 'error',
@@ -56,6 +95,26 @@ class TransactionController extends Controller
         'message' => 'ER48028',
       ], Response::HTTP_NOT_FOUND);
 
+      // if order clientipaddress does not match clientip
+      if($order->clientipaddress != $clientip) return response()->json([
+        'status' => 'error',
+        'data' => null,
+        'message' => 'ER48039',
+      ], Response::HTTP_BAD_REQUEST);
+
+      //if otimestamp is not numeric
+      if(!is_numeric($otimestamp)) return response()->json([
+        'status' => 'error',
+        'data' => null,
+        'message' => 'ER48041',
+      ], Response::HTTP_BAD_REQUEST);
+
+      // if timeout is greather than 10 seconds
+      if((time() - $otimestamp) > env('APP_TENANT_TIMEOUT')) return response()->json([
+        'status' => 'error',
+        'data' => null,
+        'message' => 'ER48040',
+      ], Response::HTTP_TIMEOUT);
       
 
       // step 3 - generate the jws

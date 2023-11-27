@@ -202,6 +202,10 @@ return [
           'required' => 'ER48024',
           'date_format' => 'ER48025',
         ],
+        'clientipaddress' => [
+          'required' => 'ER48037',
+          'ip' => 'ER48038',
+        ],
     ],
 
     /*

@@ -3,38 +3,28 @@
 namespace App\Actions;
 use App\Models\Order;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Str;
 
 class GenerateJWS
 {
-  public static function encryptTenant($tenantid, $submerchantid, $orderid)
+  public static function encryptTenant($orderid,$clientip="127.0.0.1",$initVector)
   {
-    $header = [
-      'alg' => 'HS256',
-      'tenantid' => $tenantid,
-    ];
-
-    $payload = [
-      'submerchantid' => $submerchantid,
-      'orderid' => $orderid,
-    ];
     
-    $header = json_encode($header);
-    $payload = json_encode($payload);
+    $payload = $orderid.'~'.$clientip.'~'.time();
 
-    $base64UrlHeader = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($header));
-    $base64UrlPayload = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($payload));
+    //$encryption = openssl_encrypt($simple_string, $ciphering,$encryption_key, $options, $encryption_iv);
+    $encryption = openssl_encrypt($payload, 'AES-128-CTR', env('APP_KEY'), 0, $initVector);
 
-    $signature = hash_hmac('sha256', $base64UrlHeader . "." . $base64UrlPayload, env('APP_KEY'), true);
-    $base64UrlSignature = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($signature));
-
-    $jwt = $base64UrlHeader . "." . $base64UrlPayload . "." . $base64UrlSignature;
-
-    return $jwt;
+    return $encryption;
 
   }
 
-  public static function decryptTenant($jwt)
+  public static function decryptTenant($encryptedString,$initVector)
+  {
+    $decryption = openssl_decrypt($encryptedString, 'AES-128-CTR', env('APP_KEY'), 0, $initVector);
+    $decryption = explode('~',$decryption);
+    return $decryption;
+  }
   {
     $secret = env('APP_KEY'); // secret key currently hard coded for Bill Desk PG
 

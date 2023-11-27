@@ -52,6 +52,7 @@ class OrderController extends Controller
         'submerchant_payout_amount' => 'required|integer|numeric|lt:total_order_amount',
         'tenant_commission_amount' => 'required|integer|numeric|lt:total_order_amount',
         'processing_fee_amount' => 'required|integer|numeric|lt:total_order_amount',
+        'clientipaddress' => 'required|ip',
         'tenant_order_date_time' => 'required|date_format:Y-m-d H:i:s',
         'message_on_modal' => 'required|string',
         'return_url' => 'required|url',
@@ -131,7 +132,10 @@ class OrderController extends Controller
       $order->submerchant_payout_amount = $request->submerchant_payout_amount;
       $order->tenant_commission_amount = $request->tenant_commission_amount;
       $order->processing_fee_amount = $request->processing_fee_amount;
-      
+
+      $order=>tenantipaddress = $request->ip();
+      $order->clientipaddress = $request->clientipaddress;
+
       $order->tenant_order_date_time = $request->tenant_order_date_time;
       $order->message_on_modal = $request->message_on_modal;
       $order->return_url = $request->return_url;
@@ -146,7 +150,7 @@ class OrderController extends Controller
 
       return response()->json([
               'status' => 'success',
-              'data' => $jws,
+              'data' => route('transactions.create', ['epayload' => $jws]),
               'message' => 'SPO48'.sprintf("%07d", $order->id),
           ], Response::HTTP_OK);
 

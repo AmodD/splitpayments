@@ -8,6 +8,8 @@ use App\Livewire\IndexSubmerchant;
 use App\Http\Controllers\TransactionController;
 use Illuminate\Http\Request;
 use App\Actions\GenerateJWS;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Str;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -55,7 +57,7 @@ Route::get('/sdk/thankyou', function () { return 'Successfully created merchant 
 Route::get('/sdk/v0/orders/create', function () { return 'Successfully created order in splitpayments and initiated a transaction in payment gateway  !';})->name('sdk');
 
 
-Route::post('/sdk/v2/transactions/create',[TransactionController::class,'create']);
+Route::get('/sdk/v2/transactions/create/{epayload}',[TransactionController::class,'create'])->name('transactions.create');
 
 Route::get('/jws', function (Request $request) { 
 
@@ -98,6 +100,18 @@ Route::get('/decrypt', function () {
   return GenerateJWS::decryptPG('eyJhbGciOiJIUzI1NiIsImNsaWVudGlkIjoidWF0Zm9ydHYyIiwia2lkIjoiSE1BQyJ9.eyJzdGF0dXMiOjQwOSwiZXJyb3JfdHlwZSI6ImR1cGxpY2F0ZV9yZXF1ZXN0X2Vycm9yIiwiZXJyb3JfY29kZSI6IkdORFJFMDAwMSIsIm1lc3NhZ2UiOiJEdXBsaWNhdGUgcmVxdWVzdCBlcnJvciJ9.ihXE6sf_r3JfOEBLdOkzscjTSjhXdcquYZb10Oj7peg');
 
 
+});
+
+Route::get('test', function () {
+
+  return route('transactions.create', ['epayload' => '123~127.6.6.6~1707377822']);
+//$encryption = openssl_encrypt($simple_string, $ciphering,$encryption_key, $options, $encryption_iv);
+  $encryption = openssl_encrypt('123~127.0.0.1~1707377822', 'AES-128-CTR', env('APP_KEY'), 0, '1234567890123456');
+
+  return $encryption .' \n '. openssl_decrypt($encryption, 'AES-128-CTR', env('APP_KEY'), 0, '1234567890123456');
+
+return "/tender/update/".Crypt::encryptString('SP480000048');
+  //  return view('test');
 });
 
 //Route::resource('submerchants', SubmerchantController::class)->name('submerchants', 'submerchants');
