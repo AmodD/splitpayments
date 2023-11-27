@@ -58,6 +58,7 @@ class GenerateJWS
     $header = json_encode($header);
     $payload = json_encode($payload);
     
+    Log::info($header);
     Log::info($payload);
 
     $base64UrlHeader = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($header));
