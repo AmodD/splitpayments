@@ -26,7 +26,7 @@ class GenerateJWS
       //'order_date' => ($order->created_at), // '2021-06-01T12:00:00+05:30',
       'currency' => '356',
       'ru' => 'https://splitpayments.in/wh/transactions/status',
-      //'additional_info' => '',
+      'additional_info' => '',
       //'additional_info' => 
       //  [
       //    'additional_info1' => $order
@@ -46,7 +46,8 @@ class GenerateJWS
       'device' => [
         'init_channel' => 'internet',
         'ip' => $ip,
-        'user_agent' => $user_agent
+        'user_agent' => 'Mozilla/5.0(WindowsNT10.0;WOW64;rv:51.0)Gecko/20100101 Firefox/51.0'
+      //  'user_agent' => $user_agent
       //  'accept_header' => $accept_header,
       //  'fingerprintid' => '61b12c18b5d0cf901be34a23ca64bb19',
       //  'browser_tz' => '-330',
