@@ -41,12 +41,12 @@ class GenerateJWS
         [
           'mercid' => 'UATFORT2V2',
           'amount' => number_format(($order->tenant_commission_amount + $order->processing_fee_amount)/100, 2),
-        ],
+        ]
       ],
       'device' => [
         'init_channel' => 'internet',
         'ip' => $ip,
-        'user_agent' => $user_agent,
+        'user_agent' => $user_agent
       //  'accept_header' => $accept_header,
       //  'fingerprintid' => '61b12c18b5d0cf901be34a23ca64bb19',
       //  'browser_tz' => '-330',
