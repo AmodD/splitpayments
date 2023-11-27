@@ -26,7 +26,7 @@ class GenerateJWS
       //'order_date' => ($order->created_at), // '2021-06-01T12:00:00+05:30',
       'currency' => '356',
       'ru' => 'https://splitpayments.in/wh/transactions/status',
-      'additional_info' => '',
+      //'additional_info' => '',
       'itemcode' => 'DIRECT',
       'split_payment' => [
         [
