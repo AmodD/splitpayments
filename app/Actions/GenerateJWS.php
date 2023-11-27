@@ -27,11 +27,11 @@ class GenerateJWS
       'currency' => '356',
       'ru' => 'https://splitpayments.in/wh/transactions/status',
       //'additional_info' => '',
-      'additional_info' => 
-        [
-          'additional_info1' => $order
+      //'additional_info' => 
+      //  [
+      //    'additional_info1' => $order
         //  'additional_info2' => 'Details2'
-        ],
+      //  ],
       'itemcode' => 'DIRECT',
       'split_payment' => [
         [
