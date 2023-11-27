@@ -21,8 +21,6 @@ return new class extends Migration
             $table->bigInteger('submerchant_payout_amount'); // in indian paise
             $table->bigInteger('tenant_commission_amount'); // in indian paise
             $table->bigInteger('processing_fee_amount'); // in indian paise
-            $table->ipAddress('tenantipaddress');
-            $table->ipAddress('clientipaddress');
             $table->string('externalpaymentgatewayreference',256)->nullable()->unique(); // unique from PG
             $table->string('externaltenantreference',256)->unique(); // unique from tenant
             $table->string('message_on_modal')->nullable();

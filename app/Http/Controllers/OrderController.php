@@ -133,7 +133,7 @@ class OrderController extends Controller
       $order->tenant_commission_amount = $request->tenant_commission_amount;
       $order->processing_fee_amount = $request->processing_fee_amount;
 
-      $order=>tenantipaddress = $request->ip();
+      $order->tenantipaddress = $request->ip();
       $order->clientipaddress = $request->clientipaddress;
 
       $order->tenant_order_date_time = $request->tenant_order_date_time;
