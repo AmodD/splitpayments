@@ -21,6 +21,7 @@ use Monolog\Handler\RotatingFileHandler;
 use Monolog\Logger;
 use GuzzleHttp\MessageFormatter;
 use GuzzleHttp\Middleware;
+use Illuminate\Support\Facades\Crypt;
 
 class TransactionController extends Controller
 {
@@ -45,7 +46,8 @@ class TransactionController extends Controller
         'message' => 'ER48032',
       ], Response::HTTP_BAD_REQUEST);
 
-      $payload = openssl_decrypt($epayload, 'AES-128-CTR', env('APP_KEY'), 0, env('APP_IV'));
+      //$payload = openssl_decrypt($epayload, 'AES-128-CTR', env('APP_KEY'), 0, 'SPO48'.sprintf("%011d", $order->id));
+      $payload = Crypt::decryptString($epayload);
 
       if(!$payload) return response()->json([
         'status' => 'error',

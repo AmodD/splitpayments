@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 use App\Actions\GenerateJWS;
+use Illuminate\Support\Facades\Crypt;
 
 class OrderController extends Controller
 {
@@ -147,7 +148,8 @@ class OrderController extends Controller
 
       // step 3 - generate JWT
       $payload = $order->id.'~'.$order->clientipaddress.'~'.time();
-      $encrypted = openssl_encrypt($payload, 'AES-128-CTR', env('APP_KEY'), 0, env('APP_IV'));
+      //$encrypted = openssl_encrypt($payload, 'AES-128-CTR', env('APP_KEY'), 0, 'SPO48'.sprintf("%011d", $order->id));
+      $encrypted = Crypt::encryptString($payload);
 
       return response()->json([
               'status' => 'success',
