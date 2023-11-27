@@ -21,7 +21,9 @@ class GenerateJWS
       'mercid' => env('PG_BD_MERCHANT_ID'),
       'orderid' => 'SPO48'.sprintf("%07d", $order->id),
       'amount' => number_format($order->total_order_amount/100, 2),
-      'order_date' => $order->tenant_order_date_time,
+      // order date in format '2021-06-01T12:00:00+05:30'
+      'order_date' => $order->created_at->setTimezone('Asia/Kolkata')->format('Y-m-d\TH:i:sP'),
+      //'order_date' => ($order->created_at), // '2021-06-01T12:00:00+05:30',
       'currency' => '356',
       'ru' => 'https://splitpayments.in/wh/transactions/status',
       'additional_info' => '',
@@ -33,7 +35,7 @@ class GenerateJWS
         ],
         [
           'mercid' => 'UATFORT2V2',
-          'amount' => number_format($order->tenant_commission_amount/100, 2),
+          'amount' => number_format(($order->tenant_commission_amount + $order->processing_fee_amount)/100, 2),
         ],
       ],
       'device' => [
