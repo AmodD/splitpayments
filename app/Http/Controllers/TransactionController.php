@@ -146,7 +146,7 @@ class TransactionController extends Controller
 
       // step 5 - from response get required attributes
       $pgpayload = null;
-     // dd($jwsresponse);
+     dd($jwsresponse);
 
       if(Str::contains($jwsresponse, 'error')) return $jwsresponse;
       // check if response is 200
