@@ -133,7 +133,11 @@ class TransactionController extends Controller
 
      // return $jws;
 
+      // use curl to call the PG create order api
 
+      // log the request as a curl string
+      
+      
       // step 4 - call the PG create order api
       $jwsresponse = Http::withHeaders([
           //'content-type' => 'application/jose',
