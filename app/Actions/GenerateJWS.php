@@ -7,44 +7,6 @@ use Illuminate\Support\Str;
 
 class GenerateJWS
 {
-  public static function encryptTenant($orderid,$clientip="127.0.0.1",$initVector)
-  {
-    
-    $payload = $orderid.'~'.$clientip.'~'.time();
-
-    //$encryption = openssl_encrypt($simple_string, $ciphering,$encryption_key, $options, $encryption_iv);
-    $encryption = openssl_encrypt($payload, 'AES-128-CTR', env('APP_KEY'), 0, $initVector);
-
-    return $encryption;
-
-  }
-
-  public static function decryptTenant($encryptedString,$initVector)
-  {
-    $decryption = openssl_decrypt($encryptedString, 'AES-128-CTR', env('APP_KEY'), 0, $initVector);
-    $decryption = explode('~',$decryption);
-    return $decryption;
-  }
-  {
-    $secret = env('APP_KEY'); // secret key currently hard coded for Bill Desk PG
-
-    $jwt_values = explode('.', $jwt);
-    $recieved_signature = $jwt_values[2];
-    $recieved_header_and_payload = $jwt_values[0] . '.' . $jwt_values[1];
-
-    $valid_signature = hash_hmac('sha256', $recieved_header_and_payload, $secret, true);
-    $base64UrlValidSignature = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($valid_signature));
-
-    if ($base64UrlValidSignature == $recieved_signature) {
-      $header = json_decode(base64_decode($jwt_values[0]), true);
-      $payload = json_decode(base64_decode($jwt_values[1]), true);
-      return $payload;
-    } else {
-      return false;
-    }
-
-  }
-
 
   public static function encryptPG(Order $order,$ip="127.0.0.1",$user_agent="Mozilla/5.0(WindowsNT10.0;WOW64;rv:51.0)Gecko/20100101 Firefox/51.0",$accept_header="text/html")
   {

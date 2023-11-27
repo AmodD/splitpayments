@@ -43,7 +43,7 @@ class TransactionController extends Controller
         'status' => 'error',
         'data' => null,
         'message' => 'ER48032',
-      ], Response::HTTP_BAD_REQUEST));
+      ], Response::HTTP_BAD_REQUEST);
 
       $payload = openssl_decrypt($epayload, 'AES-128-CTR', env('APP_KEY'), 0, env('APP_IV'));
 
@@ -114,7 +114,7 @@ class TransactionController extends Controller
         'status' => 'error',
         'data' => null,
         'message' => 'ER48040',
-      ], Response::HTTP_TIMEOUT);
+      ], Response::HTTP_BAD_REQUEST);
       
 
       // step 3 - generate the jws

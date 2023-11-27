@@ -146,11 +146,12 @@ class OrderController extends Controller
       $order->save();
 
       // step 3 - generate JWT
-      $jws = GenerateJWS::encryptTenant($tenant->id,$submerchant->id,$order->id);
+      $payload = $order->id.'~'.$order->clientipaddress.'~'.time();
+      $encrypted = openssl_encrypt($payload, 'AES-128-CTR', env('APP_KEY'), 0, env('APP_IV'));
 
       return response()->json([
               'status' => 'success',
-              'data' => route('transactions.create', ['epayload' => $jws]),
+              'data' => route('transactions.create', ['epayload' => $encrypted]),
               'message' => 'SPO48'.sprintf("%07d", $order->id),
           ], Response::HTTP_OK);
 
