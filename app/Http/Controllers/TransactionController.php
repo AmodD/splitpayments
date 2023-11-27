@@ -64,7 +64,7 @@ class TransactionController extends Controller
       ], Response::HTTP_BAD_REQUEST);
 
       $payload_values = explode('~', $payload);
-      dd($payload,$payload_values);
+//      dd($payload,$payload_values);
 
       //payload_values must contain 3 values
       if(count($payload_values) != 3) return response()->json([
@@ -148,7 +148,7 @@ class TransactionController extends Controller
 
       // step 5 - from response get required attributes
       $pgpayload = null;
-      dd($jwsresponse);
+      dd($order,$jwsrequest,$jwsresponse);
 
       if(Str::contains($jwsresponse, 'error')) return $jwsresponse;
       // check if response is 200
