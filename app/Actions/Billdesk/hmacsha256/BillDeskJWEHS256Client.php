@@ -12,6 +12,11 @@ use App\Actions\Billdesk\Constants;
 use App\Actions\Billdesk\Logging;
 use Monolog\Logger;
 
+use Illuminate\Support\Facades\Log;
+use App\Actions\GenerateJWS;
+
+use GuzzleHttp\Exception\ClientException;
+
 class BillDeskJWEHS256Client implements BillDeskClient {
     private $pgBaseUrl;
     private $clientId;
@@ -61,16 +66,28 @@ class BillDeskJWEHS256Client implements BillDeskClient {
             "headers" => $headers,
             "body" => $token
         ));
+        
+        $responseToken = '';
 
-        $client = new Client();
-        $request = new Request($method, $url, $headers, $token);
-        $response = $client->send($request);
-        $responseToken = $response->getBody()->getContents();
+try {
+          // Validate the value...
+          $client = new Client();
+          $request = new Request($method, $url, $headers, $token);
+          $response = $client->send($request);
+          $responseToken = $response->getBody()->getContents();
 
-        self::$logger->info("Response received from PG", array(
-            "status" => $response->getStatusCode(),
-            "body" => $responseToken
+          self::$logger->info("Response received from PG", array(
+              "status" => $response->getStatusCode(),
+              "body" => $responseToken
         ));
+} catch (ClientException $e) {
+  Log::info($e);
+//  Log::info($e->getRequest());
+  //  Log::info($e->getResponse());
+  //
+  return GenerateJWS::decryptPG($e->getResponse()->getBody()->getContents());
+}
+
     
         $responseBody = $this->jweHelper->verifyAndDecrypt($responseToken);
 
