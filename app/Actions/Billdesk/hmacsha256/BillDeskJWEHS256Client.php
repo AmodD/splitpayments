@@ -88,16 +88,19 @@ try {
   Log::info("===============CLIENT EXCEPTION ===== STARTS ======================");
   Log::info($e);
   Log::info("~~~~~~~~~~~~~~~CLIENT EXCEPTION ~~~~~~ENDS ~~~~~~~~~~~~~~~");
-  dd(GenerateJWS::decryptPG($token),$this->jweHelper->verifyAndDecrypt($token));
+
+  $responseBodyContents = $e->getResponse()->getBody()->getContents();
+
+  dd(GenerateJWS::decryptPG($responseBodyContents),$this->jweHelper->verifyAndDecrypt($responseBodyContents));
   return GenerateJWS::decryptPG($e->getResponse()->getBody()->getContents());
 } catch (ServerException $e) {
   Log::info("===============SERVER EXCEPTION ===== STARTS ======================");
   Log::info($e);
   Log::info("~~~~~~~~~~~~~~~SERVER EXCEPTION ~~~~~~ENDS ~~~~~~~~~~~~~~~");
 
-  $token = $e->getResponse()->getBody()->getContents();
+  $responseBodyContents = $e->getResponse()->getBody()->getContents();
 
-  dd(GenerateJWS::decryptPG($token),$this->jweHelper->verifyAndDecrypt($token));
+  dd(GenerateJWS::decryptPG($responseBodyContents),$this->jweHelper->verifyAndDecrypt($responseBodyContents));
   return GenerateJWS::decryptPG($e->getResponse()->getBody()->getContents());
 }
 
