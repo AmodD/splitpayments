@@ -41,12 +41,14 @@ class BillDeskJWEHS256Client implements BillDeskClient {
         }
 
         $bdTraceid = $headers[Constants::HEADER_BD_TRACE_ID];
+        Log::info("bdTraceid: " . $bdTraceid);
 
         if (empty($headers[Constants::HEADER_BD_TIMESTAMP])) {
             $headers[Constants::HEADER_BD_TIMESTAMP] = date_format(new DateTime(), 'YmdHis');
         }
 
         $bdTimestamp = $headers[Constants::HEADER_BD_TIMESTAMP];
+        Log::info("bdTimestamp: " . $bdTimestamp);
 
         $headers["Content-Type"] = "application/jose";
         $headers["Accept"] = "application/jose";
@@ -54,6 +56,7 @@ class BillDeskJWEHS256Client implements BillDeskClient {
         $requestJson = json_encode($request);
         
         self::$logger->info("Request to be sent to PG: " . $requestJson);
+        Log::info("Request to be sent to PG: " . $requestJson);
         
         $token = $this->jweHelper->encryptAndSign($requestJson, [
             Constants::JWE_HEADER_CLIENTID => $this->clientId
