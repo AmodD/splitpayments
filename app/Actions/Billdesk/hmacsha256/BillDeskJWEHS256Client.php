@@ -86,7 +86,7 @@ try {
   Log::info($e);
   Log::info("~~~~~~~~~~~~~~~CLIENT EXCEPTION ~~~~~~ENDS ~~~~~~~~~~~~~~~");
 
-  $bdhelper = new JWEHS256Helper();
+  $bdhelper = new JWEHS256Helper(env('PG_BD_CLIENT_SECRET'));
   dd(GenerateJWS::decryptPG($e->getResponse()->getBody()->getContents()),$bdhelper->verifyAndDecrypt($e->getResponse()->getBody()->getContents()));
 //  Log::info($e->getRequest());
   //  Log::info($e->getResponse());
@@ -99,7 +99,7 @@ try {
 //  Log::info($e->getRequest());
   //  Log::info($e->getResponse());
   //
-  $bdhelper = new JWEHS256Helper();
+  $bdhelper = new JWEHS256Helper(env('PG_BD_CLIENT_SECRET'));
   dd(GenerateJWS::decryptPG($e->getResponse()->getBody()->getContents()),$bdhelper->verifyAndDecrypt($e->getResponse()->getBody()->getContents()));
   return GenerateJWS::decryptPG($e->getResponse()->getBody()->getContents());
 }
