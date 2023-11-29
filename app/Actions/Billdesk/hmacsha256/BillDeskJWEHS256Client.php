@@ -86,7 +86,7 @@ try {
         ));
 } catch (ClientException $e) {
   Log::info("===============CLIENT EXCEPTION ===== STARTS ======================");
-  Log::info($e->getResponse()->getBody()->getContents());
+  Log::info($e);
   Log::info("~~~~~~~~~~~~~~~CLIENT EXCEPTION ~~~~~~ENDS ~~~~~~~~~~~~~~~");
 
 //  dd(GenerateJWS::decryptPG($e->getResponse()->getBody()->getContents()),$this->jweHelper->verifyAndDecrypt($e->getResponse()->getBody()->getContents()));
@@ -96,7 +96,7 @@ try {
   return GenerateJWS::decryptPG($e->getResponse()->getBody()->getContents());
 } catch (ServerException $e) {
   Log::info("===============SERVER EXCEPTION ===== STARTS ======================");
-  Log::info($e->getResponse()->getBody()->getContents());
+  Log::info($e);
   Log::info("~~~~~~~~~~~~~~~SERVER EXCEPTION ~~~~~~ENDS ~~~~~~~~~~~~~~~");
 //  Log::info($e->getRequest());
   //  Log::info($e->getResponse());
