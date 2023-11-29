@@ -14,7 +14,7 @@ use Monolog\Logger;
 
 use Illuminate\Support\Facades\Log;
 use App\Actions\GenerateJWS;
-
+use App\Actions\Billdesk\hmacsha256\JWEHS256Helper;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ServerException;
 
@@ -85,6 +85,9 @@ try {
   Log::info("===============CLIENT EXCEPTION ===== STARTS ======================");
   Log::info($e);
   Log::info("~~~~~~~~~~~~~~~CLIENT EXCEPTION ~~~~~~ENDS ~~~~~~~~~~~~~~~");
+
+  $bdhelper = new JWEHS256Helper();
+  dd(GenerateJWS::decryptPG($e->getResponse()->getBody()->getContents()),$bdhelper->verifyAndDecrypt($e->getResponse()->getBody()->getContents()));
 //  Log::info($e->getRequest());
   //  Log::info($e->getResponse());
   //
@@ -96,6 +99,8 @@ try {
 //  Log::info($e->getRequest());
   //  Log::info($e->getResponse());
   //
+  $bdhelper = new JWEHS256Helper();
+  dd(GenerateJWS::decryptPG($e->getResponse()->getBody()->getContents()),$bdhelper->verifyAndDecrypt($e->getResponse()->getBody()->getContents()));
   return GenerateJWS::decryptPG($e->getResponse()->getBody()->getContents());
 }
 
