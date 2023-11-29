@@ -89,7 +89,7 @@ try {
   Log::info($e->getResponse()->getBody()->getContents());
   Log::info("~~~~~~~~~~~~~~~CLIENT EXCEPTION ~~~~~~ENDS ~~~~~~~~~~~~~~~");
 
-  dd(GenerateJWS::decryptPG($e->getResponse()->getBody()->getContents()),$this->jweHelper->verifyAndDecrypt($e->getResponse()->getBody()->getContents()));
+//  dd(GenerateJWS::decryptPG($e->getResponse()->getBody()->getContents()),$this->jweHelper->verifyAndDecrypt($e->getResponse()->getBody()->getContents()));
 //  Log::info($e->getRequest());
   //  Log::info($e->getResponse());
   //
@@ -101,7 +101,7 @@ try {
 //  Log::info($e->getRequest());
   //  Log::info($e->getResponse());
   //
-  dd(GenerateJWS::decryptPG($e->getResponse()->getBody()->getContents()),$this->jweHelper->verifyAndDecrypt($e->getResponse()->getBody()->getContents()));
+  //dd(GenerateJWS::decryptPG($e->getResponse()->getBody()->getContents()),$this->jweHelper->verifyAndDecrypt($e->getResponse()->getBody()->getContents()));
   return GenerateJWS::decryptPG($e->getResponse()->getBody()->getContents());
 }
 
