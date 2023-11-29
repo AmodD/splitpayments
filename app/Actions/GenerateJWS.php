@@ -91,11 +91,11 @@ class GenerateJWS
     
     $jwt_values = explode('.', $jwt);
     
-    if(count($jwt_values) != 3) return response()->json([
-        'status' => 'error',
-        'data' => null,
-        'message' => 'ER48034',
-      ], Response::HTTP_BAD_REQUEST);
+  //  if(count($jwt_values) != 3) return response()->json([
+  //      'status' => 'error',
+  //      'data' => null,
+  //      'message' => 'ER48034',
+  //    ], Response::HTTP_BAD_REQUEST);
 
     $recieved_signature = $jwt_values[2];
     $recieved_header_and_payload = $jwt_values[0] . '.' . $jwt_values[1];
