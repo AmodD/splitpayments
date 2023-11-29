@@ -1,6 +1,6 @@
 <?php
 
-namespace io\billdesk\client;
+namespace App\Actions\Billdesk;
  
 interface BillDeskClient {
     public function createOrder($request, $headers = array());

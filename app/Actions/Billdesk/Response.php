@@ -1,6 +1,7 @@
 <?php
 
-namespace io\billdesk\client;
+//namespace io\billdesk\client;
+namespace App\Actions\Billdesk;
 
 class Response {
     private $responseStatus;

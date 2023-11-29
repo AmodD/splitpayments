@@ -1,6 +1,7 @@
 <?php
 
-namespace io\billdesk\client\hmacsha256;
+//namespace io\billdesk\client\hmacsha256;
+namespace App\Actions\Billdesk\Hmacsha256;
 
 use Exception;
 

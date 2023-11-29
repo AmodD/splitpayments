@@ -12,16 +12,24 @@ use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
 use App\Actions\GenerateJWS;
 use App\Models\Order;
+
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Http;
 //use Illuminate\Http\Client\Response;
+
 use Monolog\Handler\RotatingFileHandler;
 use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+
 use GuzzleHttp\MessageFormatter;
 use GuzzleHttp\Middleware;
+
 use Illuminate\Support\Facades\Crypt;
+
+use App\Actions\Billdesk\hmacsha256\BillDeskJWEHS256Client;
+use App\Actions\Billdesk\Logging;
 
 class TransactionController extends Controller
 {
@@ -127,6 +135,46 @@ class TransactionController extends Controller
         'message' => 'ER48040',
       ], Response::HTTP_BAD_REQUEST);
       
+
+
+      private $client;
+      private $log;
+
+
+      Logging::addHandler(new StreamHandler('php://stdout', Logger::DEBUG));
+
+      $this->client = new BillDeskJWEHS256Client("https://pguat.billdesk.io", env('PG_BD_CLIENT_ID'), env('PG_BD_CLIENT_SECRET'));
+
+        $request = array(
+            'mercid' => env('PG_BD_MERCHANT_ID'),
+            'orderid' => 'SPO48'.sprintf("%07d", $order->id),
+            'amount' => number_format($order->total_order_amount/100, 2),
+            'order_date' => $order->created_at->setTimezone('Asia/Kolkata')->format('Y-m-d\TH:i:sP'),
+            'currency' => "356",
+            'ru' => "https://splitpayments.in/wh/transactions/status",
+            'itemcode' => "DIRECT",
+            'split_payment' => array(
+              array(
+                'mercid' => 'UATFORT1V2',
+                'amount' => number_format($order->submerchant_payout_amount/100, 2),
+              ),
+              array(
+                'mercid' => 'UATFORT2V2',
+                'amount' => number_format(($order->tenant_commission_amount + $order->processing_fee_amount)/100, 2),
+              )
+            ),
+            'device' => array(
+                'init_channel' => 'internet',
+                'ip' => $request->ip(),
+                'user_agent' => 'Mozilla/5.0'
+            )
+        );
+
+        $response = $this->client->createOrder($request);
+
+        dd($response);
+
+
 
       // step 3 - generate the jws
       $jwsrequest = GenerateJWS::encryptPG($order,$request->ip(),$request->userAgent(),$request->header('accept'));
