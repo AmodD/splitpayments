@@ -95,9 +95,16 @@ Route::get('/jws', function (Request $request) {
 
 });
 
+
+}
+
+
 Route::get('/decrypt', function () { 
 
-  return GenerateJWS::decryptPG('eyJhbGciOiJIUzI1NiIsImNsaWVudGlkIjoidWF0Zm9ydHYyIiwia2lkIjoiSE1BQyJ9.eyJzdGF0dXMiOjQwOSwiZXJyb3JfdHlwZSI6ImR1cGxpY2F0ZV9yZXF1ZXN0X2Vycm9yIiwiZXJyb3JfY29kZSI6IkdORFJFMDAwMSIsIm1lc3NhZ2UiOiJEdXBsaWNhdGUgcmVxdWVzdCBlcnJvciJ9.ihXE6sf_r3JfOEBLdOkzscjTSjhXdcquYZb10Oj7peg');
+
+  $jws = $request->input('jws');
+
+  return GenerateJWS::decryptPG($jws);
 
 
 });
