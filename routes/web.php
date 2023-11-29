@@ -96,7 +96,6 @@ Route::get('/jws', function (Request $request) {
 });
 
 
-}
 
 
 Route::get('/decrypt', function () { 
