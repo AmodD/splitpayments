@@ -100,8 +100,8 @@ class GenerateJWS
       $payload = json_decode(base64_decode($jwt_values[1]), true);
       return $payload;
     } else {
-      //$header = json_decode(base64_decode($jwt_values[0]), true);
-      //$payload = json_decode(base64_decode($jwt_values[1]), true);
+      $header = json_decode(base64_decode($jwt_values[0]), true);
+      $payload = json_decode(base64_decode($jwt_values[1]), true);
       dd($jwt,$jwt_values,$recieved_signature,$recieved_header_and_payload,$valid_signature,$base64UrlValidSignature,$header,$payload);
       //return json_decode(base64_decode($jwt_values[1]), true);
       return "ER48027";
