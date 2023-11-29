@@ -4,12 +4,12 @@
 namespace App\Actions\Billdesk\hmacsha256;
 
 use DateTime;
-use io\billdesk\client\BillDeskClient;
-use io\billdesk\client\Response;
+use App\Actions\Billdesk\BillDeskClient;
+use App\Actions\Billdesk\Response;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
-use io\billdesk\client\Constants;
-use io\billdesk\client\Logging;
+use App\Actions\Billdesk\Constants;
+use App\Actions\Billdesk\Logging;
 use Monolog\Logger;
 
 class BillDeskJWEHS256Client implements BillDeskClient {

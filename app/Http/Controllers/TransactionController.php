@@ -33,6 +33,10 @@ use App\Actions\Billdesk\Logging;
 
 class TransactionController extends Controller
 {
+
+      private $client;
+      private $log;
+
     /**
      * Display a listing of the resource.
      */
@@ -135,10 +139,6 @@ class TransactionController extends Controller
         'message' => 'ER48040',
       ], Response::HTTP_BAD_REQUEST);
       
-
-
-      private $client;
-      private $log;
 
 
       Logging::addHandler(new StreamHandler('php://stdout', Logger::DEBUG));
