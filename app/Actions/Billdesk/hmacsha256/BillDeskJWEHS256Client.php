@@ -83,24 +83,22 @@ try {
         ));
 } catch (ClientException $e) {
   Log::info("===============CLIENT EXCEPTION ===== STARTS ======================");
-  Log::info($e);
+  Log::info($e->getResponse()->getBody()->getContents());
   Log::info("~~~~~~~~~~~~~~~CLIENT EXCEPTION ~~~~~~ENDS ~~~~~~~~~~~~~~~");
 
-  $bdhelper = new JWEHS256Helper(env('PG_BD_CLIENT_SECRET'));
-  dd(GenerateJWS::decryptPG($e->getResponse()->getBody()->getContents()),$bdhelper->verifyAndDecrypt($e->getResponse()->getBody()->getContents()));
+  dd(GenerateJWS::decryptPG($e->getResponse()->getBody()->getContents()),$this->jweHelper->verifyAndDecrypt($e->getResponse()->getBody()->getContents()));
 //  Log::info($e->getRequest());
   //  Log::info($e->getResponse());
   //
   return GenerateJWS::decryptPG($e->getResponse()->getBody()->getContents());
 } catch (ServerException $e) {
   Log::info("===============SERVER EXCEPTION ===== STARTS ======================");
-  Log::info($e);
+  Log::info($e->getResponse()->getBody()->getContents());
   Log::info("~~~~~~~~~~~~~~~SERVER EXCEPTION ~~~~~~ENDS ~~~~~~~~~~~~~~~");
 //  Log::info($e->getRequest());
   //  Log::info($e->getResponse());
   //
-  $bdhelper = new JWEHS256Helper(env('PG_BD_CLIENT_SECRET'));
-  dd(GenerateJWS::decryptPG($e->getResponse()->getBody()->getContents()),$bdhelper->verifyAndDecrypt($e->getResponse()->getBody()->getContents()));
+  dd(GenerateJWS::decryptPG($e->getResponse()->getBody()->getContents()),$this->jweHelper->verifyAndDecrypt($e->getResponse()->getBody()->getContents()));
   return GenerateJWS::decryptPG($e->getResponse()->getBody()->getContents());
 }
 
