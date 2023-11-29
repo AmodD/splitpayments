@@ -98,13 +98,11 @@ Route::get('/jws', function (Request $request) {
 
 
 
-Route::get('/decrypt', function () { 
-
+Route::get('/decrypt', function (Request $request) { 
 
   $jws = $request->input('jws');
 
   return GenerateJWS::decryptPG($jws);
-
 
 });
 
