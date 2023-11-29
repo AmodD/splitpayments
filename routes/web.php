@@ -114,6 +114,11 @@ return "/tender/update/".Crypt::encryptString('SP480000048');
   //  return view('test');
 });
 
+Route::get('/test2', function () {
+    return response('Hello World', 200)
+                  ->header('Content-Type', 'text/html');
+});
+
 //Route::resource('submerchants', SubmerchantController::class)->name('submerchants', 'submerchants');
 
 //Route::controller(SubmerchantController::class)->group(function () {
