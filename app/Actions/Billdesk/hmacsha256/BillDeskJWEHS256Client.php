@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Log;
 use App\Actions\GenerateJWS;
 
 use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\ServerException;
 
 class BillDeskJWEHS256Client implements BillDeskClient {
     private $pgBaseUrl;
@@ -81,12 +82,23 @@ try {
               "body" => $responseToken
         ));
 } catch (ClientException $e) {
+  Log::info("===============CLIENT EXCEPTION ===== STARTS ======================");
   Log::info($e);
+  Log::info("~~~~~~~~~~~~~~~CLIENT EXCEPTION ~~~~~~ENDS ~~~~~~~~~~~~~~~");
+//  Log::info($e->getRequest());
+  //  Log::info($e->getResponse());
+  //
+  return GenerateJWS::decryptPG($e->getResponse()->getBody()->getContents());
+} catch (ServerException $e) {
+  Log::info("===============SERVER EXCEPTION ===== STARTS ======================");
+  Log::info($e);
+  Log::info("~~~~~~~~~~~~~~~SERVER EXCEPTION ~~~~~~ENDS ~~~~~~~~~~~~~~~");
 //  Log::info($e->getRequest());
   //  Log::info($e->getResponse());
   //
   return GenerateJWS::decryptPG($e->getResponse()->getBody()->getContents());
 }
+
 
     
         $responseBody = $this->jweHelper->verifyAndDecrypt($responseToken);
