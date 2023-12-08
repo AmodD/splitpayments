@@ -172,7 +172,7 @@ class TransactionController extends Controller
 
         $response = $this->client->createOrder($request);
 
-        dd($response);
+        dd($response,$response->bdOrderId);
 
 
 
