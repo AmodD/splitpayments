@@ -182,13 +182,18 @@ class TransactionController extends Controller
         $bdOrderId = $response->getResponse()->bdorderid;
         // fetch the oAuth Token
         $oAuthToken = $response->getResponse()->links[1]->headers->authorization;
+        // setting the merchant ID
+        $merchantId = env('PG_BD_MERCHANT_ID');
 
-        dd($response,$response->getBdTraceId(),$response->getResponseStatus(),$response->getResponse()->links[1]->headers,$bdOrderId,$oAuthToken);
-
+        //dd($response,$response->getBdTraceId(),$response->getResponseStatus(),$response->getResponse()->links[1]->headers,$bdOrderId,$oAuthToken);
 
       // step 6 - redirect to order page
 
-        return view('transactions');
+        return view('transactions', [
+          'bdOrderId' => $bdOrderId,
+          'oAuthToken' => $oAuthToken,
+          'merchantId' => $merchantId,
+        ]);
     }
 
     /**
