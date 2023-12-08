@@ -88,10 +88,10 @@ control.log("inside response handler")
 		}
 	}
 	var flow_config = {
-		merchantId: {{ $merchantId }},
-		bdOrderId: {{ $bdOrderId }},
-		authToken: {{ $oAuthToken }},
-		childWindow: false
+		merchantId: "{{ $merchantId }}",
+		bdOrderId: "{{ $bdOrderId }}",
+		authToken: "{{ $oAuthToken }}",
+		childWindow: true
 };	
 	var config = {
 		responseHandler: responseHandler,
