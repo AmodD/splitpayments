@@ -35,7 +35,10 @@ Route::get('/', function () {
 
 Route::post('/wh/transactions/status', function (Request $request) {
   
-  dd($request);
+  $txnresp = $request->input('transaction_response');
+  $orderid = $request->input('orderid');
+
+  return GenerateJWS::decryptPG($txnresp);
   
   //  return response()->json([
 //    'status' => 'success',
