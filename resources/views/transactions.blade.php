@@ -90,7 +90,7 @@ control.log("inside response handler")
 	var flow_config = {
 		merchantId: {{ $merchantId }},
 		bdOrderId: {{ $bdOrderId }},
-		authToken: {{ $authToken }},
+		authToken: {{ $oAuthToken }},
 		childWindow: true
 };	
 	var config = {
