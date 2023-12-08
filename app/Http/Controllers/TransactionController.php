@@ -172,7 +172,7 @@ class TransactionController extends Controller
 
         $response = $this->client->createOrder($request);
 
-        dd($response,$response->getBdTraceId(),$response->getResponseStatus(),$response->getResponse()->links);
+        dd($response,$response->getBdTraceId(),$response->getResponseStatus(),$response->getResponse()->links[1]->headers);
 
 
 
