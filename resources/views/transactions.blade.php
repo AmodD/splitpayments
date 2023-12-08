@@ -80,9 +80,10 @@ control.log("inside response handler")
 		console.log(txn);
 		if (txn.txnResponse) {			
 			
-			responseXHR.open("POST", "https://pguatweb.billdesk.io/pgtxnsimulator/v1_2/txnresponse", true);
+		console.log("In here");
+			//responseXHR.open("POST", "https://pguatweb.billdesk.io/pgtxnsimulator/v1_2/txnresponse", true);
 			
-			responseXHR.send(txn.txnResponse.transaction_response);
+			//responseXHR.send(txn.txnResponse.transaction_response);
 		} else {
 			hideSpinner();
 		}
