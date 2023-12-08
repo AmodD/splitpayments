@@ -33,13 +33,13 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/wh/transactions/status', function () {
+Route::post('/wh/transactions/status', function () {
   return response()->json([
     'status' => 'success',
 ]);
 });
 
-Route::get('/transactions/response', function (Request $request) {
+Route::post('/transactions/response', function (Request $request) {
   dd($request);
 })->name('transactions.response');
 
