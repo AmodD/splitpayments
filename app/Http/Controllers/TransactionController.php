@@ -184,6 +184,8 @@ class TransactionController extends Controller
         $oAuthToken = $response->getResponse()->links[1]->headers->authorization;
         // setting the merchant ID
         $merchantId = env('PG_BD_MERCHANT_ID');
+        // return url
+        $returnUrl = route('transactions.response');
 
         //dd($response,$response->getBdTraceId(),$response->getResponseStatus(),$response->getResponse()->links[1]->headers,$bdOrderId,$oAuthToken);
 
@@ -193,6 +195,7 @@ class TransactionController extends Controller
           'bdOrderId' => $bdOrderId,
           'oAuthToken' => $oAuthToken,
           'merchantId' => $merchantId,
+          'returnUrl' => $returnUrl,
         ]);
     }
 

@@ -39,6 +39,11 @@ Route::get('/wh/transactions/status', function () {
 ]);
 });
 
+Route::get('/transactions/response', function (Request $request) {
+  dd($request);
+})->name('transactions.response');
+
+
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
