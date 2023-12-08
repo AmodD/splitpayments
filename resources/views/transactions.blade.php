@@ -93,7 +93,7 @@ control.log("inside response handler")
 		bdOrderId: "{{ $bdOrderId }}",
                 authToken: "{{ $oAuthToken }}",
                 returnUrl: "{{ $returnUrl }}",
-		childWindow: true
+		childWindow: false
 };	
 	var config = {
 		responseHandler: responseHandler,
