@@ -91,7 +91,7 @@ control.log("inside response handler")
 		merchantId: {{ $merchantId }},
 		bdOrderId: {{ $bdOrderId }},
 		authToken: {{ $oAuthToken }},
-		childWindow: true
+		childWindow: false
 };	
 	var config = {
 		responseHandler: responseHandler,
