@@ -172,57 +172,19 @@ class TransactionController extends Controller
 
         $response = $this->client->createOrder($request);
 
-        dd($response,$response->getBdTraceId(),$response->getResponseStatus(),$response->getResponse()->links[1]->headers);
-
-
-
-      // step 3 - generate the jws
-      $jwsrequest = GenerateJWS::encryptPG($order,$request->ip(),$request->userAgent(),$request->header('accept'));
-
-     // return $jws;
-
-      // use curl to call the PG create order api
-
-      // log the request as a curl string
-      
-      
-      // step 4 - call the PG create order api
-      $jwsresponse = Http::withHeaders([
-          //'content-type' => 'application/jose',
-          'accept' => 'application/jose',
-          'bd-timestamp' => time(),
-          'bd-traceid' => 'SPO48'.sprintf("%07d", $order->id),
-      ])->withBody(
-          $jwsrequest, 'application/jose'
-      )->withMiddleware(Middleware::log(with(new Logger('guzzle-log'))->pushHandler(
-                new RotatingFileHandler(storage_path('logs/guzzle-log.log'))
-            ), new MessageFormatter(MessageFormatter::DEBUG)))->post('https://pguat.billdesk.io/payments/ve1_2/orders/create');
-
-      // step 5 - from response get required attributes
-      $pgpayload = null;
-      dd($order,$jwsrequest,$jwsresponse);
-
-      if(Str::contains($jwsresponse, 'error')) return $jwsresponse;
-      // check if response is 200
-      //
-
-      $jwsresponse->throwIfStatus(500)->json([
+        if($response->getResponseStatus() != 200) return response()->json([
           'status' => 'error',
           'data' => null,
-          'message' => 'ER48030',
+          'message' => 'ER48044',
         ], Response::HTTP_INTERNAL_SERVER_ERROR);
 
-      $jwsresponse->throwIfStatus(400)->json([
-          'status' => 'error',
-          'data' => null,
-          'message' => 'ER48031',
-        ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        // fetch the bdOrderId
+        $bdOrderId = $response->getResponse()->bdorderid;
+        // fetch the oAuth Token
+        $oAuthToken = $response->getResponse()->links[1]->headers->authorization;
 
-      $pgpayload = GenerateJWS::decryptPG($jwsresponse);
+        dd($response,$response->getBdTraceId(),$response->getResponseStatus(),$response->getResponse()->links[1]->headers,$bdOrderId,$oAuthToken);
 
-      //else $pgpayload = GenerateJWS::decrypt($jwsresponse);
-
-      return $pgpayload;
 
       // step 6 - redirect to order page
 
