@@ -21,30 +21,30 @@ use Illuminate\Support\Str;
 |
 */
 
-Route::middleware('throttle:2,1')->get('/test', function () {
-        return "testing";
-});
-
-Route::get('/landing', function () {
-    return view('landing');
-});
+Route::middleware('throttle:20,1')->get('/sdk/v1/submerchants', CreateSubmerchant::class)->name('submerchants.create');
+Route::middleware('tenantipcheck')->post('/sdk/v1/orders',[OrderController::class,'create'])->name('orders.create');
+Route::get('/sdk/v1/transactions/{epayload}',[TransactionController::class,'create'])->name('transactions.create');
 
 Route::get('/', function () {
     return view('welcome');
 });
 
+
+Route::get('/decrypt', function (Request $request) { 
+  $jws = $request->input('jws');
+  return GenerateJWS::decryptPG($jws);
+});
+
+
 Route::post('/wh/transactions/status', function (Request $request) {
-  
   $txnresp = $request->input('transaction_response');
   $orderid = $request->input('orderid');
-
   return GenerateJWS::decryptPG($txnresp);
-  
   //  return response()->json([
-//    'status' => 'success',
-//]);
-
+  //    'status' => 'success',
+  //]);
 });
+
 
 Route::post('/transactions/response', function (Request $request) {
   dd($request);
@@ -64,12 +64,11 @@ Route::middleware([
 });
 
 
-Route::middleware('throttle:20,1')->get('/sdk/registration', CreateSubmerchant::class)->name('sdk');
 Route::get('/sdk/thankyou', function () { return 'Successfully created merchant with status as INACTIVE . Pending Verification !';})->name('sdk');
 Route::get('/sdk/v0/orders/create', function () { return 'Successfully created order in splitpayments and initiated a transaction in payment gateway  !';})->name('sdk');
 
 
-Route::get('/sdk/v2/transactions/create/{epayload}',[TransactionController::class,'create'])->name('transactions.create');
+
 
 Route::get('/jws', function (Request $request) { 
 
@@ -110,15 +109,7 @@ Route::get('/jws', function (Request $request) {
 
 
 
-Route::get('/decrypt', function (Request $request) { 
-
-  $jws = $request->input('jws');
-
-  return GenerateJWS::decryptPG($jws);
-
-});
-
-Route::get('test', function () {
+Route::get('/test3', function () {
 
   return route('transactions.create', ['epayload' => '123~127.6.6.6~1707377822']);
 //$encryption = openssl_encrypt($simple_string, $ciphering,$encryption_key, $options, $encryption_iv);
@@ -130,15 +121,14 @@ return "/tender/update/".Crypt::encryptString('SP480000048');
   //  return view('test');
 });
 
+
+
 Route::get('/test2', function () {
     return response('Hello World', 200)
                   ->header('Content-Type', 'text/html');
 });
 
-//Route::resource('submerchants', SubmerchantController::class)->name('submerchants', 'submerchants');
 
-//Route::controller(SubmerchantController::class)->group(function () {
-//    Route::get('/submerchants/{id}', 'show');
-//    Route::post('/submerchants', 'store');
-//});
-
+Route::middleware('throttle:2,1')->get('/test', function () {
+        return "testing";
+});
