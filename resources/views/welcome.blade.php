@@ -46,7 +46,7 @@
 			
 		<div class="w-full flex items-center justify-between">
 			<a class="flex items-center text-indigo-400 no-underline hover:no-underline font-bold text-2xl lg:text-4xl"  href="#"> 
-				 <svg class="h-8 fill-current text-indigo-600 pr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M10 20a10 10 0 1 1 0-20 10 10 0 0 1 0 20zm-5.6-4.29a9.95 9.95 0 0 1 11.2 0 8 8 0 1 0-11.2 0zm6.12-7.64l3.02-3.02 1.41 1.41-3.02 3.02a2 2 0 1 1-1.41-1.41z"/></svg> <p class="text-red-400">SPLIT</p>PAYMENTS
+				 <img src="/splitpayments_logo_transparent.png" class="h-8 fill-current text-indigo-600 pr-2" viewBox="0 0 20 20"></img> <p class="text-purple-800">SPLIT</p>PAYMENTS
 			</a>
 			
 			<div class="flex w-1/2 justify-end content-center">		
@@ -65,7 +65,7 @@
 			<h1 class="my-4 text-3xl md:text-5xl text-purple-800 font-bold leading-tight text-center md:text-left slide-in-bottom-h1">Revenue Accounting & Commission Payments Sorted!</h1>
 			<p class="leading-normal text-base md:text-2xl mb-8 text-center md:text-left slide-in-bottom-subtitle">We help ticketing businesses split ticket revenue, partner payments and commissions!</p>
 		
-			<p class="text-blue-400 font-bold pb-8 lg:pb-6 text-center md:text-left fade-in">Contact us at:</p>
+			<p class="text-indigo-400 font-bold pb-8 lg:pb-6 text-center md:text-left fade-in">Contact us at:</p>
 			<div class="flex w-full justify-center md:justify-start pb-24 lg:pb-0 fade-in">
 				<div class="h-12 pr-4 bounce-top-icons">info@splitpayments.in</div>
 				<div class="h-12 bounce-top-icons">9890075975</div>

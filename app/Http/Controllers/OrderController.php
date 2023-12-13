@@ -12,6 +12,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 use App\Actions\GenerateJWS;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Log;
 
 class OrderController extends Controller
 {
@@ -28,12 +29,27 @@ class OrderController extends Controller
      */
     public function create(Request $request)
     {
-      // step 1 - validate request
-        //$request->host();
-        //$request->httpHost();
-        //$request->schemeAndHttpHost();
-        //
-        //$token = $request->bearerToken();
+      $unkownTenantOrderChannel = Log::build(['driver' => 'single','path' => storage_path('logs/tenants/unkown/orders.log')]);
+
+      if ($request->hasHeader('SP-Tenant-ID')) {
+        $value = $request->header('SP-Tenant-ID');     
+        $tenant = Tenant::where('uuid', $value)->first();
+
+        if($tenant) $tenantOrderChannel = Log::build(['driver' => 'single','path' => storage_path('logs/tenants/'.'unkown/orders.log')]);
+
+
+      } else {
+        Log::stack([$unkownTenantOrderChannel])->info('New Order Request Recieved Without Header Key SP-Tenant-ID!');
+      }
+
+
+        $logPath = storage_path('logs/'.'custom.log');
+
+        Log::build([
+          'driver' => 'single',
+          'path' => storage_path('logs/custom.log'),
+        ])->info('New Order Request Recieved!');
+
 
 
         if (!$request->accepts(['application/json'])) {
@@ -46,7 +62,7 @@ class OrderController extends Controller
 
       // Front end validations
       $validator = Validator::make($request->all(), [
-        'tenant_id' => 'required|uuid',
+        'tenant_id' => 'required|uuid|unique:App\Models\Tenants,uuid',
         'submerchant_reference_number' => 'required|string',
         'order_reference_number' => 'required|string|unique:App\Models\Order,externaltenantreference',
         'total_order_amount' => 'required|integer|numeric',
