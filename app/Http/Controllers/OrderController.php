@@ -29,28 +29,7 @@ class OrderController extends Controller
      */
     public function create(Request $request)
     {
-      $unkownTenantOrderChannel = Log::build(['driver' => 'single','path' => storage_path('logs/tenants/unkown/orders.log')]);
-
-      if ($request->hasHeader('SP-Tenant-ID')) {
-        $value = $request->header('SP-Tenant-ID');     
-        $tenant = Tenant::where('uuid', $value)->first();
-
-        if($tenant) $tenantOrderChannel = Log::build(['driver' => 'single','path' => storage_path('logs/tenants/'.'unkown/orders.log')]);
-
-
-      } else {
-        Log::stack([$unkownTenantOrderChannel])->info('New Order Request Recieved Without Header Key SP-Tenant-ID!');
-      }
-
-
-        $logPath = storage_path('logs/'.'custom.log');
-
-        Log::build([
-          'driver' => 'single',
-          'path' => storage_path('logs/custom.log'),
-        ])->info('New Order Request Recieved!');
-
-
+      $loggingChannel = Log::build(['driver' => 'single','path' => storage_path('logs/tenants/unkown/orders.log')]);
 
         if (!$request->accepts(['application/json'])) {
            return response()->json([
@@ -60,10 +39,47 @@ class OrderController extends Controller
           ], Response::HTTP_NOT_ACCEPTABLE);
         }
 
+      if ($request->hasHeader('SP-Tenant-ID')) {
+        $value = $request->header('SP-Tenant-ID');     
+        $tenant = Tenant::where('uuid', $value)->first();
+
+        if($tenant) $loggingChannel = Log::build(['driver' => 'single','path' => storage_path('logs/tenants/'.$tenant->code.'/orders.log')]);
+        else {
+          Log::stack([$loggingChannel])->error('ER48046');
+           return response()->json([
+              'status' => 'error',
+              'data' => null,
+              'message' => 'ER48046',
+          ], Response::HTTP_BAD_REQUEST);
+        }
+
+      } 
+      else {
+          Log::stack([$loggingChannel])->error('ER48045');
+           return response()->json([
+              'status' => 'error',
+              'data' => null,
+              'message' => 'ER48045',
+          ], Response::HTTP_BAD_REQUEST);
+      }
+
+      if($tenant->status != 'active') {
+        Log::stack([$loggingChannel])->alert('ER48050');
+        Log::stack([$loggingChannel])->alert('AL48050');
+        return response()->json([
+              'status' => 'error',
+              'data' => null,
+              'message' => 'ER48050',
+          ], Response::HTTP_CONFLICT);
+      }
+
+      Log::stack([$loggingChannel])->info('IN48047');
+
+
       // Front end validations
       $validator = Validator::make($request->all(), [
-        'tenant_id' => 'required|uuid|unique:App\Models\Tenants,uuid',
-        'submerchant_reference_number' => 'required|string',
+//        'tenant_id' => 'required|uuid|unique:App\Models\Tenants,uuid',
+        'submerchant_reference_number' => 'required|string,',
         'order_reference_number' => 'required|string|unique:App\Models\Order,externaltenantreference',
         'total_order_amount' => 'required|integer|numeric',
         'submerchant_payout_amount' => 'required|integer|numeric|lt:total_order_amount',
@@ -77,56 +93,48 @@ class OrderController extends Controller
       ]);
 
       if ($validator->stopOnFirstFailure()->fails()) {    
+      Log::stack([$loggingChannel])->error($validator->messages()->first());
            return response()->json([
               'status' => 'error',
               'data' => null,
               'message' => $validator->messages()->first(),
           ], Response::HTTP_BAD_REQUEST);
       }
+
+      $loggingChannel = Log::build(['driver' => 'single','path' => storage_path('logs/tenants/'.$tenant->code.'/unkown/orders.log')]);
+      $submerchant = Submerchant::where('externaltenantreference', $request->submerchant_reference_number)->first();
+      
+      if($submerchant) {
+        $loggingChannel = Log::build(['driver' => 'single','path' => storage_path('logs/tenants/'.$tenant->code.'/'.$submerchant->code.'/orders.log')]);
+      }
+      else {
+         Log::stack([$loggingChannel])->error('ER48049');
+         return response()->json([
+            'status' => 'error',
+            'data' => null,
+            'message' => 'ER48049',
+         ], Response::HTTP_BAD_REQUEST);
+      }
+
+      if($submerchant->status != 'active') {
+        Log::stack([$loggingChannel])->alert('ER48051');
+        Log::stack([$loggingChannel])->alert('AL48051');
+        return response()->json([
+              'status' => 'error',
+              'data' => null,
+              'message' => 'ER48051',
+          ], Response::HTTP_CONFLICT);
+      }
+
+      Log::stack([$loggingChannel])->info('IN48048');
       
       if ($request->total_order_amount != ($request->submerchant_payout_amount + $request->tenant_commission_amount + $request->processing_fee_amount)) { 
+        Log::stack([$loggingChannel])->alert('ER48023');
            return response()->json([
               'status' => 'error',
               'data' => null,
               'message' => "ER48023",
           ], Response::HTTP_BAD_REQUEST);
-      }
-
-     // Back end validations 
-      $tenant = Tenant::with('submerchants')->where('uuid', $request->tenant_id)->first();
-
-      if(!$tenant) {
-        return response()->json([
-              'status' => 'error',
-              'data' => null,
-              'message' => 'ER48004',
-          ], Response::HTTP_NOT_FOUND);
-      }
-
-      if($tenant->status != 'active') {
-        return response()->json([
-              'status' => 'error',
-              'data' => null,
-              'message' => 'ER48005',
-          ], Response::HTTP_CONFLICT);
-      }
-
-      $submerchant = $tenant->submerchants()->where('externaltenantreference', $request->submerchant_reference_number)->first();
-      
-      if(!$submerchant) {
-        return response()->json([
-              'status' => 'error',
-              'data' => null,
-              'message' => 'ER48008',
-          ], Response::HTTP_NOT_FOUND);
-      }
-
-      if($submerchant->status != 'active') {
-        return response()->json([
-              'status' => 'error',
-              'data' => null,
-              'message' => 'ER48009',
-          ], Response::HTTP_CONFLICT);
       }
 
       // step 2 - store order in db
@@ -205,6 +213,8 @@ class OrderController extends Controller
      */
     public function destroy(Order $order)
     {
-        //
+      
+      
+      
     }
 }

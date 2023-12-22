@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->uuid('uuid',100)->unique();
             $table->string('name');
+            $table->string('code');
             $table->string('message_on_modal')->nullable();
             $table->string('return_url')->nullable();
             $table->string('return_url_message')->nullable();

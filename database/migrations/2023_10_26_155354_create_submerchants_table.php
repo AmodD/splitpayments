@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('submerchants', function (Blueprint $table) {
             $table->id();
+            $table->string('code');
             $table->foreignId('tenant_id');
             $table->foreignId('paymentgateway_id');
             $table->string('mid',9)->nullable();

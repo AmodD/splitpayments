@@ -27,6 +27,10 @@
 		.slide-in-bottom-h1{-webkit-animation:slide-in-bottom .5s cubic-bezier(.25,.46,.45,.94) .5s both;animation:slide-in-bottom .5s cubic-bezier(.25,.46,.45,.94) .5s both}
 		.slide-in-bottom-subtitle{-webkit-animation:slide-in-bottom .5s cubic-bezier(.25,.46,.45,.94) .75s both;animation:slide-in-bottom .5s cubic-bezier(.25,.46,.45,.94) .75s both}
 		.fade-in{-webkit-animation:fade-in 1.2s cubic-bezier(.39,.575,.565,1.000) 1s both;animation:fade-in 1.2s cubic-bezier(.39,.575,.565,1.000) 1s both}
+		.fade-in-details{-webkit-animation:fade-in 1s cubic-bezier(.39,.575,.565,1.000) 1s both;animation:fade-in 1s cubic-bezier(.39,.575,.565,1.000) 1s both}
+
+
+
 		.bounce-top-icons{-webkit-animation:bounce-top .9s 1s both;animation:bounce-top .9s 1s both}
 		
 		@-webkit-keyframes slide-in-bottom{0%{-webkit-transform:translateY(1000px);transform:translateY(1000px);opacity:0}100%{-webkit-transform:translateY(0);transform:translateY(0);opacity:1}}@keyframes slide-in-bottom{0%{-webkit-transform:translateY(1000px);transform:translateY(1000px);opacity:0}100%{-webkit-transform:translateY(0);transform:translateY(0);opacity:1}}
@@ -66,7 +70,7 @@
 			<p class="leading-normal text-base md:text-2xl mb-8 text-center md:text-left slide-in-bottom-subtitle">We help ticketing businesses split ticket revenue, partner payments and commissions!</p>
 		
 			<p class="text-indigo-400 font-bold pb-8 lg:pb-6 text-center md:text-left fade-in">Contact us at:</p>
-			<div class="flex w-full justify-center md:justify-start pb-24 lg:pb-0 fade-in">
+			<div class="flex w-full justify-center md:justify-start pb-24 lg:pb-0 fade-in-details">
 				<div class="h-12 pr-4 bounce-top-icons">info@splitpayments.in</div>
 				<div class="h-12 bounce-top-icons">9890075975</div>
 			</div>

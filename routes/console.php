@@ -25,18 +25,19 @@ Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
 
-Artisan::command('splitpay:create-tenant {name}', function (string $name) {
+Artisan::command('splitpay:create-tenant {name} {code}', function (string $name, string $code) {
     $tenant = new Tenant;
       
     $tenant->uuid = Str::ulid()->toRfc4122();
     $tenant->name = $name;
+    $tenant->code = $code;
     $tenant->secret = (string) Str::ulid();
     $tenant->status = 'inactive';
 
     $tenant->save();
 
-    $this->info("Created a new Tenant {$name} with  UUID as {$tenant->uuid} having secret {$tenant->secret} ");
-})->purpose('Creating a new Tenant => name');;
+    $this->info("Created a new Tenant {$name} having code {$code} with  UUID as {$tenant->uuid} having secret {$tenant->secret} ");
+})->purpose('Creating a new Tenant => name | code');;
 
 Artisan::command('splitpay:create-pg {name} {merchantid} {clientid} {clientsecret}', function (string $name, string $merchantid, string $clientid, string $clientsecret) {
     $pg = new Paymentgateway;
@@ -50,33 +51,34 @@ Artisan::command('splitpay:create-pg {name} {merchantid} {clientid} {clientsecre
     $pg->save();
 
     $this->info("Created a new Payment Gateway {$name}");
-})->purpose('Creating a new Payment Gateway => name | merchantid | clientid | clientsecret');;
+})->purpose('Creating a new Payment Gateway => name | merchantid | clientid | clientsecret');
 
 
-Artisan::command('splitpay:create-submerchant {tenantid} {pgid} {name} {refno}', function (string $tenantid, string $pgid, string $name, string $refno) {
+Artisan::command('splitpay:create-submerchant {tenantcode} {pgid} {name} {refno} {code}', function (string $tenantcode, string $pgid, string $name, string $refno, string $code) {
     $smc = new Submerchant;
 
-    $tenant = Tenant::find($tenantid);
+    $tenant = Tenant::where('code',$tenantcode)->first();
     $pg = Paymentgateway::find($pgid);
       
-    $smc->tenant_id = $tenantid;
+    $smc->tenant_id = $tenant->id;
     $smc->paymentgateway_id = $pgid;
+    $smc->code = $code;
     $smc->dba_name = $name;
     $smc->externaltenantreference = $refno;
     $smc->status = 'inactive';
 
     $smc->save();
 
-    $this->info("Created a new sub-Merchant {$name} under tenant {$tenant->name} with payment gateway {$pg->name} ");
-})->purpose('Creating a new sub-Merchant => tenantid | pgid | name | submerchant reference number');
+    $this->info("Created a new sub-Merchant {$name} having code {$code} under tenant {$tenant->name} with payment gateway {$pg->name} ");
+})->purpose('Creating a new sub-Merchant => tenantuuid | pgid | name | submerchant reference number | code');
 
 
-Artisan::command('splitpay:update-submerchant-bankdetails {submerchantid} {bankname} {ifsc} {accounttype} {accountnumber}', function (string $submerchantid, string $bankname, string $ifsc, string $accounttype, string $accountnumber) {
+Artisan::command('splitpay:update-submerchant-bankdetails {submerchantcode} {bankname} {ifsc} {accounttype} {accountnumber}', function (string $submerchantcode, string $bankname, string $ifsc, string $accounttype, string $accountnumber) {
 
-    $smc = Submerchant::find($submerchantid);
+    $smc = Submerchant::where('code',$submerchantcode)->first();
       
     if(!$smc) { 
-      $this->info("No sub-Merchant with {$submerchantid} ");
+      $this->info("No sub-Merchant with code as {$submerchantcode} ");
     }
     else {  
       $smc->bank_name = $bankname;
@@ -88,14 +90,14 @@ Artisan::command('splitpay:update-submerchant-bankdetails {submerchantid} {bankn
       $this->info("Updated sub-Merchant {$smc->dbaname} ");
     }
 
-})->purpose('Update a sub-Merchant => submerchantid | bankname | ifsc | accounttype | accountnumber ');
+})->purpose('Update a sub-Merchant => submerchantcode | bankname | ifsc | accounttype | accountnumber ');
 
 
-Artisan::command('splitpay:update-submerchant-gstn {submerchantid} {gstn}', function (string $submerchantid, string $gstn) {
+Artisan::command('splitpay:update-submerchant-gstn {submerchantcode} {gstn}', function (string $submerchantcode, string $gstn) {
 
-    $smc = Submerchant::find($submerchantid);
+    $smc = Submerchant::where('code',$submerchantcode);
     if(!$smc) { 
-      $this->info("No sub-Merchant with {$submerchantid} ");
+      $this->info("No sub-Merchant with code as {$submerchantcode} ");
     }
     else {  
       $smc->gstn = $gstn;
@@ -105,14 +107,14 @@ Artisan::command('splitpay:update-submerchant-gstn {submerchantid} {gstn}', func
       $this->info("Updated sub-Merchant {$smc->dba_name} ");
     }
 
-})->purpose('Update a sub-Merchant => submerchantid | gstn ');
+})->purpose('Update a sub-Merchant => submerchantcode | gstn ');
 
 
-Artisan::command('splitpay:deactivate-submerchant {submerchantid}', function (string $submerchantid) {
+Artisan::command('splitpay:deactivate-submerchant {submerchantcode}', function (string $submerchantcode) {
 
-    $smc = Submerchant::find($submerchantid);
+    $smc = Submerchant::where('code',$submerchantcode);
     if(!$smc) { 
-      $this->info("No sub-Merchant with {$submerchantid} ");
+      $this->info("No sub-Merchant with code as {$submerchantcode} ");
     }
     else {  
       $smc->status = 'inactive';
@@ -122,13 +124,13 @@ Artisan::command('splitpay:deactivate-submerchant {submerchantid}', function (st
       $this->info("Deactivated sub-Merchant {$smc->dba_name} ");
     }
 
-})->purpose('Deactivate status of a sub-Merchant => submerchantid');
+})->purpose('Deactivate status of a sub-Merchant => submerchantcode');
 
-Artisan::command('splitpay:activate-submerchant {submerchantid}', function (string $submerchantid) {
+Artisan::command('splitpay:activate-submerchant {submerchantcode}', function (string $submerchantcode) {
 
-    $smc = Submerchant::find($submerchantid);
+    $smc = Submerchant::where('code',$submerchantcode);
     if(!$smc) { 
-      $this->info("No sub-Merchant with {$submerchantid} ");
+      $this->info("No sub-Merchant with code as {$submerchantcode} ");
     }
     else {  
       $smc->status = 'active';
@@ -138,13 +140,13 @@ Artisan::command('splitpay:activate-submerchant {submerchantid}', function (stri
       $this->info("Activated sub-Merchant {$smc->dba_name} ");
     }
 
-})->purpose('Activate status of a sub-Merchant => submerchantid');
+})->purpose('Activate status of a sub-Merchant => submerchantcode');
 
-Artisan::command('splitpay:activate-tenant {tenantid}', function (string $tenantid) {
 
-    $tenant = Tenant::find($tenantid);
+Artisan::command('splitpay:activate-tenant {tenantcode}', function (string $tenantcode) {
+    $tenant = Tenant::where('code',$tenantcode);
     if(!$tenant) { 
-      $this->info("No Tenant with {$tenantid} ");
+      $this->info("No Tenant with code as {$tenantcode} ");
     }
     else {  
       $tenant->status = 'active';
@@ -153,5 +155,27 @@ Artisan::command('splitpay:activate-tenant {tenantid}', function (string $tenant
 
       $this->info("Activated Tenant {$tenant->name} ");
     }
+})->purpose('Activate status of a Tenant => tenantcode');
 
-})->purpose('Activate status of a Tenant => tenantid');
+
+Artisan::command('splitpay:list-tenants', function () {
+  $this->table(
+    ['Name', 'UUID', 'Code', 'Status'],
+    Tenant::all(['name', 'uuid', 'code' ,'status'])->toArray()
+  );
+})->purpose('List of all Tenants with Code and UUID and Name');
+
+
+Artisan::command('splitpay:list-submerchants {tenantcode}', function (string $tenantcode) {
+    $tenant = Tenant::find($tenantcode);
+    if(!$tenant) { 
+      $this->info("No Tenant with code as {$tenantcode} ");
+    }
+    else
+    {
+      $this->table(
+        ['Name', 'Status'],
+        Tenant::all(['name', 'uuid', 'code' ,'status'])->where('tenant_id',$tenant->id)->toArray()
+      );
+    }
+})->purpose('List of all Merchants for a given Tenant');
