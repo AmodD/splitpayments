@@ -66,7 +66,7 @@
 		
 		<!--Left Col-->
 		<div class="flex flex-col w-full xl:w-2/5 justify-center lg:items-start overflow-y-hidden">
-			<h1 class="my-4 text-3xl md:text-5xl text-red-800 font-bold leading-tight text-center md:text-left slide-in-bottom-h1">Revenue Accounting & Commission Payments Sorted!</h1>
+			<h1 class="my-4 text-3xl md:text-5xl text-green-800 font-bold leading-tight text-center md:text-left slide-in-bottom-h1">Revenue Accounting & Commission Payments Sorted!</h1>
 			<p class="leading-normal text-base md:text-2xl mb-8 text-center md:text-left slide-in-bottom-subtitle">We help ticketing businesses split ticket revenue, partner payments and commissions!</p>
 		
 			<p class="text-indigo-400 font-bold pb-8 lg:pb-6 text-center md:text-left fade-in">Contact us at:</p>
